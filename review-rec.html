@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
+    <div class="container">
+        <div class="row rec-review">
+            <div data-template="app:get-rec">
+                <div data-template="app:rec-dashboard"/>
+            </div>
+        </div>
+    <!-- modal used for dynamic data processing messages and interactions -->
+        <div class="modal fade" id="rec-review-modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">x</span>
+                        </button>
+                        <h4 class="modal-title">Modal title</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Modal body</p>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+    </div>
+    <script>
+        function poptastic(url) {
+        var newWindow = window.open(url, 'name', 'height=450,width=450');
+        if (window.focus) {
+        newWindow.focus();
+        }
+        }
+
+    </script>
+</div>

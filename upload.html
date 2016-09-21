@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
+    <div class="container top-padding">
+        <h1>Syrica.org Administrative functions</h1>
+        <h4>Upload new record</h4>
+        <blockquote>
+            <form enctype="multipart/form-data" method="post" action="modules/upload.xql" class="form-horizontal" id="upload">
+                <fieldset>
+                    <p>
+                        <input type="file" size="80" name="fileUpload"/>
+                    </p>
+                    <p>
+                        <select type="text" id="module" name="module" class="form-control">
+                            <option value="">-- Select Syriaca.org submodule--</option>
+                            <option value="places">Gazetteer</option>
+                            <option value="persons">SBD: Syriac Biographical Dictionary</option>
+                            <option value="persons">A Guide to Syriac Authors</option>
+                            <option value="persons">Qadishe: Guide to the Syriac Saints</option>
+                            <option value="works">BHSE: Bibliotheca Hagiographica Syriaca Electronica</option>
+                            <option value="spear">SPEAR: Syriac Persons Events and Relations</option>
+                            <option value="manuscripts">A Digital Catalogue of Syriac Manuscripts in the British Library</option>
+                        </select>
+                    </p>
+                    <p>
+                        <input type="submit" value="Upload" class="btn btn-primary"/>
+                    </p>
+                </fieldset>
+            </form>
+            <br/>
+            <p class="alert alert-info">
+                <small>* TEI document must be well formed. Please follow Syriaca.org guidelines [link to guidelines?] for drafting place record. <br/>
+                </small>
+            </p>
+        </blockquote>
+        <div id="response"/>
+        <p>
+            <a href="browse.html">View all in process records</a>
+        </p>
+        <p>
+            <a href="forms/place-form.xql">Add new place data using our online form</a>
+        </p>
+        <p>* An in process feature for generating new tei records online</p>
+    </div>
+</div>

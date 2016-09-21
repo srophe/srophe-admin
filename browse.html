@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
+    <div class="container top-padding">
+        <h1>Browse Records:</h1>
+        <!-- Select collection to browse  -->
+        <form action="browse.html" class="container">
+            <div class="form-group">
+                <div class="form-inline">
+                    <label>Collection:&#160;</label>
+                    <select name="collection-title" id="collection-title" class="form-control">
+                        <option> --- Select Collection --- </option>
+                        <option data-template="app:get-collections-list"/>
+                    </select>
+                    &#160;<button type="submit" class="btn btn-info">Browse</button>
+                </div>
+            </div>
+        </form>
+        <div data-template="app:get-browse">
+            <div data-template="app:browse"/>
+        </div>
+    </div>
+</div>

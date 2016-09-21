@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
+    <div class="container top-padding">
+        <h1>Browse Comments:</h1>
+        <!-- Select collection to browse  -->
+        <form action="browse-comments.html" class="container">
+            <div class="form-group">
+                <div class="form-inline">
+                    <label>Comments for Collection:&#160;</label>
+                    <select name="collection-title" id="collection-title" class="form-control">
+                        <option> --- Select Collection --- </option>
+                        <option value="person">Persons</option>
+                        <option value="place">Places</option>
+                        <option value="manuscript">Manuscripts</option>
+                        <option value="work">Work</option>
+                    </select>
+                    &#160;<button type="submit" class="btn btn-info">Browse</button>
+                </div>
+            </div>
+        </form>
+        <div data-template="app:get-comments-browse">
+            <div data-template="app:browse-comments"/>
+        </div>
+    </div>
+</div>

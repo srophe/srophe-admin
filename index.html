@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
+    <div class="container top-padding">
+        <div class="row">
+            <div class="col-md-3">
+                <h1>Syrica.org Administrative functions</h1>
+                <p>Edit and review Syrica.org records.</p>
+                <ul class="nav nav-pills nav-stacked">
+                    <li>
+                        <a href="browse.html">
+                            <i class="glyphicon glyphicon-file"/> Browse Records</a>
+                    </li>
+                    <li>
+                        <a href="browse-comments.html">
+                            <i class="glyphicon glyphicon-comment"/> Browse Comments </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="glyphicon glyphicon-edit"/>Actions</a>
+                        <ul class="nav nav-pills nav-stacked indent">
+                            <li>
+                                <a href="ner.html">
+                                    <i class="glyphicon glyphicon-edit"/>NER</a>
+                            </li>
+                            <li>
+                                <a href="upload.html">
+                                    <i class="glyphicon glyphicon-upload"/>Upload Record</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-content col-md-7">
+                <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="dashboardOne">
+                    <div class="panel-body dashboard">
+                        <div class="panel-body dashboard">
+                            <div class="row" style="padding:2em;">
+                                <div class="col-md-6">
+                                    <div data-template="app:index-dashboard" data-template-collection-title="The Syriac Biographical Dictionary" data-template-collection-icon="user" data-template-style="primary"/>
+                                    <div data-template="app:index-dashboard" data-template-collection-title="Qadishe: A Guide to the Syriac Saints" data-template-collection-icon="user" data-template-style="warning"/>
+                                    <div data-template="app:index-dashboard" data-template-collection-title="A Guide to Syriac Authors" data-template-collection-icon="user" data-template-style="success"/>
+                                </div>
+                                <div class="col-md-6">
+                                    <div data-template="app:index-dashboard" data-template-collection-title="The Syriac Gazetteer" data-template-collection-icon="globe" data-template-style="info"/>
+                                    <div data-template="app:index-dashboard" data-template-collection-title="Bibliotheca Hagiographica Syriaca Electronica" data-template-style="success"/>
+                                    <div data-template="app:index-dashboard" data-template-collection-title="A Digital Catalogue of Syriac Manuscripts in the British Library" data-template-style="warning"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-content col-md-2"/>
+        </div>
+    </div>
+</div>

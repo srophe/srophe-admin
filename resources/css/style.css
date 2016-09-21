@@ -1,0 +1,36 @@
+#content {margin:0 2em; padding-top:2em; background-color:white; width:95%;}
+.rec-review h3 {font-size:1.5em; color:gray;}
+.rec-review h1 {color:gray; border-bottom:3px solid gray; padding-left:1em;}
+
+.tab-pane {border-bottom:none; border-right:none;}
+.tab-content{padding: 0 2em;}
+.nav .indent{display:block; margin-left:1.5em; padding-bottom:1em;}
+.nav-tabs {border:none;}
+table.browse {width: 70%}
+table.browse td {padding-right:2em;}
+/*table.browse th.status {width:75px;}
+table.browse th.id {width:50px;}
+*/
+.label-success, .label-warning {border:2px solid #fff; display:block;margin-bottom:.2em; }
+.comments {display:block; padding:.5em; margin-top:1em; border-bottom: 1px dotted #eee;}
+.comments footer {display:block;text-align:left;}
+.navbar {margin:0;}
+.navbar .container{margin:0; padding:0 1em;}
+.navbar-brand {padding-right:2em;}
+.nav-title {line-height: 2em;padding:1em 0 0 0;}
+.syr-submit {display:block; float:none; clear:both;}
+/*header {font-weight:bold; color:#999;}*/
+
+pre {
+	padding: 0.1em 0.5em 0.3em 0.7em;
+	border-left: 11px solid #ccc;
+	margin: 1.7em 0 1.7em 0.3em;
+	overflow: auto;
+	width: 93%;
+	max-width:inherit;
+	white-space: pre-wrap;       /* CSS 3 */
+    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    word-wrap: break-word;       /* Internet Explorer 5.5+ */
+	}

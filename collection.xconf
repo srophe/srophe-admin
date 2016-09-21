@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<collection xmlns="http://exist-db.org/collection-config/1.0">
+    <index xmlns:xs="http://www.w3.org/2001/XMLSchema">
+        <fulltext default="none" attributes="false"/>
+    </index>
+    <triggers>
+        <!-- Adjust Comments permissions.-->
+        <trigger event="create" class="org.exist.collections.triggers.XQueryTrigger">
+            <parameter name="query" value="module namespace trigger='http://exist-db.org/xquery/trigger';
+                declare function trigger:after-create-document($uri as xs:anyURI)
+                {if(contains($uri,'/comments/')) then sm:chmod($uri, 'rwxrwxrwx')
+                else if(contains($uri,'/places/')) then (sm:chgrp(xs:anyURI($uri), 'srophe'), sm:chmod($uri, 'rwxrwxr-x'))
+                else ()};"/>
+        </trigger>
+    </triggers>
+</collection>

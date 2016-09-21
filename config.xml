@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <!-- App title -->
+    <title>Syriaca.org: The Syriac Reference Portal Administrative Forms</title>
+    <!-- App description -->
+    <description>A collaborative research project publishling online reference works concerning the
+        culture, history, and literature of Syriac communities from antiquity to the present.</description>
+    <!-- Contact email -->
+    <contact>info@syriaca.org</contact>
+    <!-- Logo name (assumes path to logo is $app-root/resources/img/) -->
+    <logo>syriaca-logo.png</logo>
+    <!-- Web Site URL -->
+    <url>http://syriaca.org/</url>
+    <!-- Root of app for building dynamic links. Default is eXist app root -->
+    <nav-base>/exist/apps/srophe-admin</nav-base>
+    <!-- Root for public view of records, allows code sharing accross admin and base app -->
+    <public-view>/exist/apps/srophe</public-view>
+    <!-- eXist app root for app deployment-->
+    <app-root>srophe-admin</app-root>
+    <!-- eXist data app root for gazetteer data -->
+    <data-root>srophe-data</data-root>
+    <comments-root>srophe-comments</comments-root>
+    <!-- Base URI for identifiers in app data -->
+    <base-uri>http://syriaca.org</base-uri>
+    <!-- Map rendering -->
+    <maps>
+        <option>google</option>
+        <option selected="true">leaflet</option>
+    </maps>
+</config>

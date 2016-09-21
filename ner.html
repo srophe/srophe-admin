@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Syrica.org Administrative functions</h1>
+            <ul class="nav nav-pills nav-stacked col-md-2">
+                <li>
+                    <a href="#" data-toggle="pill">
+                        <i class="glyphicon glyphicon-edit"/>Actions</a>
+                    <li>
+                        <a href="#tab_ner" data-toggle="pill" class="indent ner" data-url="/exist/apps/srophe-admin/services/ner.xql?id={$app:id}" data-param-run="no"> NER </a>
+                    </li>
+                    <li>
+                        <a href="#tab_names" data-toggle="pill" class="indent">Name normalization</a>
+                    </li>
+                </li>
+                <!--<li><br/><a class="btn btn-default" href="modules/download.xql?id={$app:id}" role="button">Download TEI</a></li>-->
+            </ul>
+            <div class="tab-content col-md-10">
+                <div class="tab-pane active" id="tab_ner">
+                    <h2>NER</h2>
+                    <p class="alert alert-info">
+                        Find a record or upload your own TEI. Records must be in the TEI namespace, the NER script adds, and matches on tei:placeName tei:persName and tei:author elements
+                    </p>
+                    <div class="indent">
+                        <form id="get-rec" action="/exist/apps/srophe-forms/review-rec.html" method="get">
+                            <p>
+                                <label>Find existing record</label>
+                            </p>
+                            <label>Syriaca ID: </label>
+                            <input type="text" name="id"/>
+                            <input type="submit" value="Submit"/>
+                        </form>
+                        <p style="margin:2em 0; "> -OR- </p>
+                        <form enctype="multipart/form-data" method="post" action="modules/services/ner.xql" class="form-horizontal" id="upload">
+                            <fieldset>
+                                <label>Run NER on xml not saved in the database</label>
+                                <p>
+                                    <input type="file" size="80" name="fileUpload"/>
+                                </p>
+                                <p>
+                                    <input type="submit" value="Run NER" class="btn btn-primary"/>
+                                </p>
+                            </fieldset>
+                        </form>
+                        <br/>
+                        <!--  Need to work on this
+                        <form enctype="multipart/form-data" method="post" action="services/reconcile-refs.xql" class="form-horizontal" id="upload">
+                            <fieldset>
+                                <label>Reconcile conflicting refs using our reconciliation tool. </label>
+                                <p>
+                                    <input type="file" size="80" name="fileUpload"/>
+                                </p>
+                                <p><input type="submit" value="Go" class="btn btn-primary"/></p>
+                            </fieldset>
+                        </form>
+                        <br/>
+                        -->
+                        <p class="alert alert-info">
+                            <small>* TEI document must be well formed and must be in the TEI namespace. </small>
+                        </p>
+                    </div>
+
+                    <!--
+                    <a href="#" class="ner btn btn-default" data-url="/exist/apps/srophe-forms/services/ner.xql?id={$id}" data-param-run="run">Run NER</a>
+                    <a href="#" class="btn btn-default refresh">Review and Correct</a>
+                    -->
+                </div>
+                <div class="tab-pane" id="tab_names">
+                    <h2>Name Normalizations</h2>
+                    <p class="bg-info" style="margin:1em;padding:.25em;">
+                        <i>Not available yet</i>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

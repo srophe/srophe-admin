@@ -1,2 +1,2 @@
 # srophe-admin
-Admin module for Syriaca.org. Used to create/edit/curate TEI records. 
+Admin module used by Syriaca.org for reviewing and updating TEI XML records. 
