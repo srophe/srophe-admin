@@ -4,7 +4,7 @@
 # Other files and folders
 *sosol.xql
 *sosol-submit.xql
-*oath.xql
+*oauth.xql
 
 # Build and Release Folders
 *.xar
