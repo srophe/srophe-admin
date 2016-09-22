@@ -13,8 +13,7 @@ import module namespace templates="http://exist-db.org/xquery/templates" ;
  :)
 import module namespace config="http://syriaca.org/srophe-admin/config" at "config.xqm";
 import module namespace app="http://syriaca.org/srophe-admin/templates" at "app.xql";
-import module namespace place="http://syriaca.org/srophe-admin//place" at "place.xql";
-import module namespace comments="http://syriaca.org/srophe-admin//comments" at "comments.xql";
+import module namespace comments="http://syriaca.org/srophe-admin/comments" at "comments.xql";
 
 declare option exist:serialize "method=html5 media-type=text/html enforce-xhtml=yes";
 

@@ -3,7 +3,7 @@ xquery version "3.0";
 module namespace app="http://syriaca.org/srophe-admin/templates";
 
 import module namespace templates="http://exist-db.org/xquery/templates" ;
-import module namespace comments="http://syriaca.org/srophe-admin//comments" at "comments.xql";
+import module namespace comments="http://syriaca.org/srophe-admin/comments" at "comments.xql";
 import module namespace global="http://syriaca.org/global" at "lib/global.xqm";
 declare namespace tei="http://www.tei-c.org/ns/1.0";
 declare namespace atom="http://www.w3.org/2005/Atom";
