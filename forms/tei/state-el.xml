@@ -3,7 +3,7 @@
         <!-- NOTE will need to indicate if it is a headword? -->
     <xf:repeat ref="tei:state" id="new-state">
         <fieldset>
-            <legend>
+            <legend> 
                 State
                 <xf:trigger appearance="minimal" class="btn remove pull-right">
                     <xf:label/>

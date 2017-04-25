@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<div xmlns="http://www.w3.org/1999/xhtml" xmlns:xf="http://www.w3.org/2002/xforms" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:tei="http://www.tei-c.org/ns/1.0">
+<div xmlns="http://www.w3.org/1999/xhtml" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xf="http://www.w3.org/2002/xforms">
     <xf:dialog id="new-name" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -7,15 +7,6 @@
                     <xf:label> </xf:label>
                     <xf:action ev:event="DOMActivate">
                         <xf:hide dialog="new-name"/>
-                        <xf:setvalue ref="instance('i-search')/q" value="''"/>
-                        <xf:setvalue ref="instance('i-search-results')" value="''"/>
-                        <!--
-                        <xf:setvalue ref="instance('i-add-name')" value="''"/>
-                        <xf:setvalue ref="instance('i-add-name')/@ref" value="''"/>
-                        <xf:setvalue ref="instance('i-selected')/tei:TEI/child::*/@ref" value="''"/>
-                        <xf:setvalue ref="instance('i-search')/q" value="''"/>
-                        <xf:setvalue ref="instance('i-search-results')" value="''"/>
-                        -->
                     </xf:action>
                 </xf:trigger>
             </div>
@@ -25,8 +16,7 @@
                     <xf:input id="search-names" ref="instance('i-search')/q" incremental="true">
                         <xf:label>Search: </xf:label>
                         <!-- for each key press send the s1 search out -->
-                        <xf:send submission="s-name-lookup" ev:event="xforms-value-changed" ref="instance('i-search')/q" class="input-group-btn"/>
-                        <!--<xf:send submission="s-name-lookup" ev:event="xforms-value-changed" ref="string-length(instance('i-search')/q) > 2" class="input-group-btn"/>-->
+                        <xf:send submission="s-name-lookup" ev:event="xforms-value-changed" ref="string-length(instance('i-search')/q) &gt; 2" class="input-group-btn"/>
                     </xf:input>
                     <xf:select1 ref="instance('i-search')/element" class="inline">
                         <xf:label> Element:</xf:label>
@@ -83,15 +73,8 @@
                     <xf:label> </xf:label>
                     <xf:action ev:event="DOMActivate">
                         <xf:hide dialog="new-name"/>
-                        <xf:setvalue ref="instance('i-search')/q" value="''"/>
-                        <xf:setvalue ref="instance('i-search-results')" value="''"/>
-                        <!--
-                        <xf:setvalue ref="instance('i-add-name')" value="''"/>
-                        <xf:setvalue ref="instance('i-add-name')/@ref" value="''"/>
-                        <xf:setvalue ref="instance('i-selected')/tei:TEI/child::*/@ref" value="''"/>
-                        <xf:setvalue ref="instance('i-search')/q" value="''"/>
-                        <xf:setvalue ref="instance('i-search-results')" value="''"/>
-                        -->
+                        <!--<xf:setvalue ref="instance('i-selected')/tei:TEI/child::*/@ref" value="''"/>-->
+                        <xf:setvalue ref="instance('i-search-results')/tei:TEI" value="''"/>
                     </xf:action>
                 </xf:trigger>
             </div>

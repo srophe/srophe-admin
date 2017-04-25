@@ -3,7 +3,7 @@
     <!-- Review and delete bibl records -->
     <xf:repeat ref="tei:bibl" id="bibl-edit">
         <fieldset>
-            <legend>
+            <legend> 
                     Note
                     <xf:trigger appearance="minimal" class="btn remove pull-right">
                     <xf:label/>

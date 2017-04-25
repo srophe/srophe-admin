@@ -84,4 +84,26 @@
             <type>saint</type>
         </roleName>
     </persName>
+    <placeType>
+        <type>building</type>
+        <type>church</type>
+        <type>diocese</type>
+        <type>fortification</type>
+        <type>island</type>
+        <type>madrasa</type>
+        <type>monastery</type>
+        <type>mosque</type>
+        <type>mountain</type>
+        <type>open-water</type>
+        <type>parish</type>
+        <type>province</type>
+        <type>quarter</type>
+        <type>region</type>
+        <type>river</type>
+        <type>settlement</type>
+        <type>state</type>
+        <type>synagogue</type>
+        <type>temple</type>
+        <type>unknown</type>
+    </placeType>
 </TEI>

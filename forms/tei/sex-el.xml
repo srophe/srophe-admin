@@ -3,7 +3,7 @@
         <!-- NOTE will need to indicate if it is a headword? -->
     <xf:group ref="tei:sex" id="new-sex">
         <fieldset>
-            <legend>
+            <legend> 
                 Sex
                 <xf:trigger appearance="minimal" class="btn remove pull-right">
                     <xf:label/>

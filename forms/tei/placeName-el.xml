@@ -17,7 +17,7 @@
                 <br/>
                 <xi:include href="lang-attr.xml"/>
                 <xi:include href="source-attr.xml"/>
-
+                
                 <!-- Is Syriaca.org Headword -->
                 <xf:trigger class="btn add" appearance="minimal" ref="self::node()[not(@syriaca-tags)]">
                     <xf:label>Make Headword</xf:label>
