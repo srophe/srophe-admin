@@ -10,6 +10,9 @@ declare variable $exist:resource external;
 declare variable $exist:controller external;
 declare variable $exist:prefix external;
 
+declare variable $logout := request:get-parameter("logout", ());
+declare variable $login := request:get-parameter("user", ());
+
 if ($exist:path eq "") then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <redirect url="{concat(request:get-uri(), '/')}"/>
@@ -19,40 +22,18 @@ else if ($exist:path eq "/") then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <redirect url="index.html"/>
     </dispatch>
-
 else if ($exist:path eq "/oauth") then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <forward url="{$exist:controller}/modules/services/sosol.xql">
             <set-header name="Cache-Control" value="max-age=3600, must-revalidate"/>
         </forward>
     </dispatch>
-
-else if ($exist:resource eq 'upload.html') then (
+else if ($logout or $login) then (
     login:set-user("org.exist.demo.login", (), false()),
-    if (request:get-attribute("org.exist.demo.login.user")) then
-        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-            <view>
-                <forward url="{$exist:controller}/modules/view.xql">
-                    {login:set-user("org.exist.demo.login", (), true())}
-                    <set-attribute name="$exist:prefix" value="{$exist:prefix}"/>
-                    <set-attribute name="$exist:controller" value="{$exist:controller}"/>
-                    <set-header name="Cache-Control" value="no-cache"/>
-                </forward>
-            </view>
-        </dispatch>
-    else
-        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-            <forward url="login.html"/>
-            <view>
-                <forward url="{$exist:controller}/modules/view.xql">
-                    <set-attribute name="$exist:prefix" value="{$exist:prefix}"/>
-                    <set-attribute name="$exist:controller" value="{$exist:controller}"/>
-                    <set-header name="Cache-Control" value="no-cache"/>
-                </forward>
-            </view>
-        </dispatch>
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <redirect url="{replace(request:get-uri(), "^(.*)\?", "$1")}"/>
+    </dispatch>
 )
-
 (: Pass all requests to HTML files through view.xql, which handles HTML templating :)
 else if (ends-with($exist:resource, ".html")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
@@ -91,7 +72,10 @@ else if (contains($exist:path, "/resources/")) then
             <set-header name="Cache-Control" value="max-age=3600, must-revalidate"/>
         </forward>
     </dispatch>
-
+else if (contains($exist:path, "/forms/")) then
+    <ignore xmlns="http://exist.sourceforge.net/NS/exist">
+        <cache-control cache="no"/>
+    </ignore>
 else
     <ignore xmlns="http://exist.sourceforge.net/NS/exist">
         <cache-control cache="yes"/>

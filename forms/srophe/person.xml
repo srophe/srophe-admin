@@ -48,6 +48,7 @@
                 <root xmlns="">
                     <q/>
                     <element/>
+                    <type/>
                 </root>
             </xf:instance>
             <!-- Controlled vocab  search results are loaded into this instance -->
@@ -100,7 +101,7 @@
                         
             <!-- Look up sources  -->
             <xf:submission id="s-bibl-lookup" method="get" ref="instance('i-search')" replace="instance" instance="i-search-results" serialization="none" mode="synchronous">
-                <xf:resource value="concat('services/controlled-vocab-search.xql?element=bibl&amp;','q=',instance('i-search')//q,'*')"/>
+                <xf:resource value="concat('services/controlled-vocab-search.xql?element=bibl&amp;','q=',instance('i-search')//q,'*','&amp;type=',instance('i-search')//type)"/>
             </xf:submission>
             <!-- Lookup names -->
             <xf:submission id="s-name-lookup" method="get" ref="instance('i-search')" replace="instance" instance="i-search-results" serialization="none" mode="synchronous">

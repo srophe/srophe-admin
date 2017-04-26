@@ -44,12 +44,36 @@
             <xf:instance xmlns="http://www.tei-c.org/ns/1.0" id="i-rec">
                 <tei:TEI/>
             </xf:instance>
+            <xf:instance id="i-user-info">
+                <response><user/><password/></response>
+            </xf:instance>
+            
+            <!-- Get User Info -->
+            <xf:submission id="s-current-user" ref="instance('i-user-info')" replace="instance" instance="i-user-info" method="get" serialization="none" mode="synchronous" resource="services/login.xql?action=current"/>
+            
+            <xf:submission id="s-login" resource="services/login.xql?action=login" ref="instance('i-user-info')" replace="instance" instance="i-user-info" method="post">
+                <xf:action ev:event="xforms-submit-done">
+                    <xf:hide dialog="login"/>
+                </xf:action>
+                <xf:action ev:event="xforms-submit-error">
+                    <xf:message>Bad Username/Password.</xf:message>
+                </xf:action>
+            </xf:submission>
+
+            <xf:submission id="s-logout" ref="instance('i-user-info')" replace="instance" instance="i-user-info" method="post" serialization="none" mode="synchronous" resource="services/login.xql?logout=true">
+                <xf:action ev:event="xforms-submit-done">
+                    <xf:message>Logged out good job</xf:message>
+                </xf:action>
+                <xf:action ev:event="xforms-submit-error">
+                    <xf:message>Bad Username/Password.</xf:message>
+                </xf:action>
+            </xf:submission>
             
             <!-- Submissions URI reserve functions -->
             <xf:submission id="s-get-ids" ref="instance('i-ids')" replace="instance" instance="i-ids" method="get" serialization="none" mode="synchronous" resource="services/syr-ids.xml"/>
             <xf:submission id="s-increment-uri" resource="services/increment-uri.xql" ref="instance('i-ids')" replace="instance" instance="i-submission" method="post">
                 <xf:action ev:event="xforms-submit-done">
-                    <xf:message>URI Reserved.</xf:message>
+                    <xf:message ref="instance('i-submission')//*:message"/>
                 </xf:action>
                 <xf:action ev:event="xforms-submit-error">
                     <xf:message ref="instance('i-submission')//*:message"/>
@@ -58,12 +82,13 @@
             
             <!-- Submissions record creation -->
             <xf:submission id="s-new-rec" ref="instance('i-rec')" replace="instance" instance="i-rec" method="get" serialization="none" mode="synchronous">
-                <xf:resource value="concat('xml-templates/', instance('i-rec-type')/text(),'.xml' )"/>
+                <xf:resource value="concat('xml-templates/', instance('i-rec-type')/@type,'.xml' )"/>
             </xf:submission>
             
             <!-- On ready -->
             <xf:action ev:event="xforms-ready">
                 <xf:send submission="s-get-ids"/>
+                <xf:send submission="s-current-user"/>
             </xf:action>
             <!-- Set required fields -->
             <xf:bind nodeset="instance('i-ids')//tei:range/@start" required="true()"/>
@@ -111,10 +136,17 @@
                                         <xf:insert ev:event="DOMActivate" ref="instance('i-rec-id')" at="last()" position="after" origin="."/>
                                         <xf:insert ev:event="DOMActivate" ref="instance('i-rec-type')" at="last()" position="after" origin="../tei:form-type"/>
                                         <xf:load ev:event="DOMActivate" show="embed" targetid="subform">
-                                            <xf:resource value="concat('form.xq?form=srophe/', ../@form-type,'.xml' )"/>
+                                            <xf:resource value="concat('form.xq?form=srophe/', ../tei:form-type/@type,'.xml' )"/>
                                         </xf:load>
                                         <xf:send ev:event="DOMActivate" submission="s-new-rec"/>
                                         <xf:toggle ev:event="DOMActivate" case="edit-rec"/>
+                                        <!--
+                                        <xf:load ev:event="DOMActivate" show="embed" targetid="subform" if="not(instance('i-submission')//*:response[@status='fail'])">
+                                            <xf:resource value="concat('form.xq?form=srophe/', ../@form-type,'.xml' )"/>
+                                        </xf:load>
+                                        <xf:send ev:event="DOMActivate" submission="s-new-rec" if="not(instance('i-submission')//*:response[@status='fail'])"/>
+                                        <xf:toggle ev:event="DOMActivate" case="edit-rec" if="not(instance('i-submission')//*:response[@status='fail'])"/>
+                                        -->
                                     </xf:trigger>
                                     <xf:trigger class="btn btn-default" appearance="minimal">
                                         <xf:label>
@@ -205,6 +237,40 @@
                         <xf:toggle ev:event="DOMActivate" case="URI"/>
                     </xf:action>
                 </xf:trigger>
+                <xf:dialog id="login" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <xf:trigger class="btn btn-default modal-close pull-right top" appearance="minimal">
+                                <xf:label> </xf:label>
+                                <xf:action ev:event="DOMActivate">
+                                    <xf:hide dialog="login"/>
+                                </xf:action>
+                            </xf:trigger>
+                        </div>
+                        <div class="modal-body" style="background-color:white;">
+                            <h4>Login:</h4>
+                            <xf:group ref="instance('i-user-info')">
+                                <xf:input ref="*:user">
+                                    <xf:label>Name</xf:label>
+                                </xf:input>
+                                <xf:secret ref="*:password">
+                                    <xf:label>Password: </xf:label>
+                                </xf:secret>&#160;&#160;
+                                <xf:submit class="btn btn-default" submission="s-login" appearance="minimal">
+                                    <xf:label> Login </xf:label>
+                                </xf:submit> 
+                            </xf:group>
+                        </div>
+                        <div class="modal-footer">
+                            <xf:trigger class="btn btn-default modal-close pull-right" appearance="minimal">
+                                <xf:label> </xf:label>
+                                <xf:action ev:event="DOMActivate">
+                                    <xf:hide dialog="login"/>
+                                </xf:action>
+                            </xf:trigger>
+                        </div>
+                    </div>
+                </xf:dialog>
             </div>
     </body>
 </html>

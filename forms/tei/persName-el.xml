@@ -118,16 +118,26 @@
                     </xf:trigger>
                 </div>
                 <div class="form-inline">
+                    <!-- instance('i-user-info')//*:user[. != '']  #anonymous-description #syriaca-headword -->
                     <xi:include href="lang-attr.xml"/>
                     <xi:include href="source-attr.xml"/>
-                    <xf:trigger class="btn btn-default add" appearance="minimal" ref="self::node()[not(@syriaca-tags)]">
+                    <xf:trigger class="btn btn-default add" appearance="minimal" ref="self::node()[not(@syriaca-tags = '#syriaca-headword')]">
                         <xf:label>Make Headword</xf:label>
-                        <xf:insert ev:event="DOMActivate" context="." at="." origin="instance('i-template')//tei:person/tei:persName/@syriaca-tags"/>
+                        <xf:insert ev:event="DOMActivate" context="." at="." origin="instance('i-template')//tei:person/tei:persName/@syriaca-tags[. = '#syriaca-headword']"/>
                     </xf:trigger>
-                    <xf:output ref="@syriaca-tags">
+                    <xf:trigger class="btn btn-default add" appearance="minimal" ref="self::node()[not(@syriaca-tags = '#anonymous-description')]">
+                        <xf:label>Anonymous Description </xf:label>
+                        <xf:insert ev:event="DOMActivate" context="." at="." origin="instance('i-template')//tei:person/tei:persName/@syriaca-tags[. = '#anonymous-description']"/>
+                    </xf:trigger>
+                    <xf:output ref="@syriaca-tags[. = '#syriaca-headword']">
                         <xf:label class="inline">Headword: </xf:label>
                     </xf:output>
-                    <xf:trigger appearance="minimal" class="btn remove" ref="@syriaca-tags">
+                    <xf:trigger appearance="minimal" class="btn remove" ref="@syriaca-tags[. = '#syriaca-headword']">
+                        <xf:label/>
+                        <xf:delete ev:event="DOMActivate" ref="."/>
+                    </xf:trigger>
+                    <xf:output ref="@syriaca-tags[. = '#anonymous-description']"/>
+                    <xf:trigger appearance="minimal" class="btn remove" ref="@syriaca-tags[. = '#anonymous-description']">
                         <xf:label/>
                         <xf:delete ev:event="DOMActivate" ref="."/>
                     </xf:trigger>

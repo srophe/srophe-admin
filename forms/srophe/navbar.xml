@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+<div class="navbar navbar-default navbar-fixed-top" role="navigation" xmlns="http://www.w3.org/1999/xhtml" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xf="http://www.w3.org/2002/xforms">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
@@ -29,9 +29,17 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav pull-right">
-                <li style="padding-top:1em;">
-                    <span data-template="app:username"/>
-                </li>
+                <li style="margin-top:.5em;padding-top:.5em;">
+                    <xf:submit  submission="s-logout" appearance="minimal" ref="instance('i-user-info')//*:user[. != '']">
+                        <xf:label> <span class="glyphicon glyphicon-user"/>&#160; <xf:output ref="instance('i-user-info')//*:user"/>&#160; <span class="glyphicon glyphicon-remove"/>  </xf:label>
+                    </xf:submit>
+                    <xf:trigger class="btn btn-default" appearance="minimal" ref="instance('i-user-info')//*:user[. = '']">
+                        <xf:label> <span class="glyphicon glyphicon-user"/> &#160; Login </xf:label>
+                        <xf:action ev:event="DOMActivate">
+                            <xf:show dialog="login"/>
+                        </xf:action>
+                    </xf:trigger>
+                </li> 
             </ul>
         </div><!--/.nav-collapse -->
     </div>

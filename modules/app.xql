@@ -47,9 +47,10 @@ declare function app:username($node as node(), $model as map(*)) {
     return
     <span>
         {
-        if ($name != 'Guest') then
-            <a href="index.html?logout=true">{$name}  <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
-        else <a href="upload.html?_cache=no">Login</a>
+        if ($name != 'Guest') then 
+            <a href="?logout=true"><span class="glyphicon glyphicon-user" aria-hidden="true"/> {concat(' ',$name,' ')} <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+        else 
+            <a href="#loginDialog" data-toggle="modal"><span class="glyphicon glyphicon-user" aria-hidden="true"/> Login </a>
         }
     </span>
 };
@@ -471,20 +472,6 @@ return
 };
 
 (:~
- : @depricated records will not need to be deleted, although it may be nice to suppress them.
- : All TEI record changes used by review-rec.html
-:)
-declare %templates:wrap function app:delete-rec($node as node(), $model as map(*)){
-<div>
-    {
-    if(request:get-attribute("org.exist.demo.login.user")) then
-       <a href="modules/delete.xql?id={$place:id}" class="delete-rec btn btn-primary">Delete Record</a>
-    else ()
-    }
-</div>
-};
-
-(:~
  : Dashboard function outputs collection statistics for individual.
  : ex:
  :      <div data-template="app:index-dashboard" data-template-collection-title="The Syriac Biographical Dictionary" data-template-collection-icon="user" data-template-style="primary"/>
@@ -515,4 +502,54 @@ declare function app:index-dashboard($node as node(), $model as map(*), $collect
                     </div>
                 </a>
             </div>
+};
+
+(:~
+ : Forms dashboard
+:)
+declare function app:forms-dashboard($node as node(), $model as map(*)){
+<form action="{$global:app-root}/forms/services/increment-uri.xql" role="increment-uris" method="post">
+{
+    let $ids := doc($global:app-root || '/forms/services/syr-ids.xml')
+    for $r in $ids//*:div
+    let $class := string($r/@class)
+    let $next := $r/descendant::*:last-calculated/@num + 1
+    let $nextURI := concat(substring-before($r/descendant::*:last-calculated/@uri, $r/descendant::*:last-calculated/@num),$next) 
+    return 
+        <div>
+            <h3>{$class}</h3>
+            <div class="indent">
+                <p> Next Available URI:  
+                <code>{string($nextURI)}</code></p>
+                <p>
+                <button class="btn btn-default" name="num" type="submit" value="{$next}"><span class="glyphicon glyphicon-save-file"/> Reserve URI</button>
+                &#160;<button class="btn btn-default" name="new-rec" type="submit" value="{$next}"><span class="glyphicon glyphicon-pencil"/> Reserve URI and Create TEI</button>
+                &#160;<a class="togglelink btn btn-default" data-toggle="collapse" data-target="#showRangeForm{$class}"><span class="glyphicon glyphicon-save-file"/> Reserve URI range</a>
+                &#160;<a class="togglelink btn btn-default" data-toggle="collapse" data-target="#moreDetails{$class}"><span class="glyphicon glyphicon-question-sign"/> More Info</a></p>
+                <div class="collapse" id="showRangeForm{$class}" style=" margin:1em;border:1px solid #eeee;">
+                    <div class="form-group">
+                        <label for="idrange">URI Range: </label>
+                        <div class="form-inline">
+                            <input type="text" id="start" name="start" placeholder="Start Range (numeric values only)" class="form-control"/>&#160;
+                            to &#160;<input type="text" id="end" name="end" placeholder="End Range (numeric values only)" class="form-control"/>
+                            <br/>
+                            <textarea rows="4" cols="50" id="notes" name="notes" placeholder="Notes about this URI range"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="collapse" id="moreDetails{$class}" style="padding:1em; margin:1em;border:1px solid #eeee;">
+                    <p>Last URI in the development database : {string($r/descendant::*:last-dev/@num)}</p>
+                    {
+                        for $reserved in $r/descendant::*:reserved/*:range
+                        return 
+                        <p>
+                            <b>Reserved range: </b> {string($reserved/@start)} to {string($reserved/@end)}<br/>
+                            Notes {string($reserved/@note)} &#160;<i> -{string($reserved/@who)}</i><br/>
+                        </p>
+                    }
+                </div>
+            </div>
+        </div>
+}
+</form>
 };

@@ -17,13 +17,18 @@ let $results := request:get-data()
 let $collection := '/db/apps/srophe-admin/forms/services/'
 let $file-name := 'syr-ids.xml'
 let $current := doc('syr-ids.xml')
+let $user:= if(request:get-attribute("org.exist.demo.login.user")) then request:get-attribute("org.exist.demo.login.user") else xmldb:get-current-user()
 return 
 <data>{
-    try {
-            (xmldb:store($collection, $file-name, $results), 
-            <response status="success"><message>URI Reserved.</message></response>)
-         }
-    catch * {
-            <response status="fail"><message>{concat('There was a problem: ',$err:code, $err:description)}</message></response>
-         }
+    if($user != '') then
+       if(sm:get-user-groups($user) = ('srophe','dba')) then 
+         try {
+                 (xmldb:store($collection, $file-name, $results), 
+                 <response status="success"><message>URI Reserved.</message></response>)
+              }
+         catch * {
+                 <response status="fail"><message>{concat('There was a problem: ',$err:code, $err:description)}</message></response>
+              }
+        else <response status="fail"><message>You do not have permission to reserve a URI. Please log in. (Note: You can use the forms and save the TEI XML file without reserving a URI) </message></response>              
+    else <response status="fail"><message>You do not have permission to reserve a URI. Please log in. (Note: You can use the forms and save the TEI XML file without reserving a URI) </message></response>            
 }</data>

@@ -11,9 +11,16 @@
                 </xf:trigger>
             </legend>
             <div class="panel">
-                <xf:input ref=".">
-                    <xf:label/>
-                </xf:input>
+                <xf:select1 ref=".">
+                    <xf:item>
+                        <xf:label>M</xf:label>
+                        <xf:value>M</xf:value>
+                    </xf:item>
+                    <xf:item>
+                        <xf:label>F</xf:label>
+                        <xf:value>F</xf:value>
+                    </xf:item>
+                </xf:select1>
                 <xi:include href="source-attr.xml"/>
             </div>
         </fieldset>
