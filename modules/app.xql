@@ -39,7 +39,7 @@ declare function app:tei2html($nodes as node()*) {
 declare function app:username($node as node(), $model as map(*)) {
     let $user:= request:get-attribute("org.exist.demo.login.user")
     let $name :=
-        if ($user) then
+        if ($user) then 
             if(sm:get-account-metadata($user, xs:anyURI('http://axschema.org/namePerson')) != '') then
                 sm:get-account-metadata($user, xs:anyURI('http://axschema.org/namePerson'))
             else xmldb:get-current-user()

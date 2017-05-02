@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="http://localhost:8080/exist/apps/xsltforms/xsltforms.xsl" type="text/xsl"?><?xsltforms-options debug="yes"?><?css-conversion no?><?xml-model href="http://www.oxygenxml.com/1999/xhtml/xhtml-xforms.nvdl" schematypens="http://purl.oclc.org/dsdl/nvdl/ns/structure/1.0"?>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xf="http://www.w3.org/2002/xforms">
+<?xml-stylesheet href="http://wwwb.library.vanderbilt.edu/exist/apps/xsltforms/xsltforms.xsl" type="text/xsl"?><?xsltforms-options debug="yes"?><?css-conversion no?><?xml-model href="http://www.oxygenxml.com/1999/xhtml/xhtml-xforms.nvdl" schematypens="http://purl.oclc.org/dsdl/nvdl/ns/structure/1.0"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xf="http://www.w3.org/2002/xforms" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:tei="http://www.tei-c.org/ns/1.0">
     <!-- Depreiciated -->
     <head>
         <title>Syriaca.org: Create New Record</title>
@@ -45,7 +45,10 @@
                 <tei:TEI/>
             </xf:instance>
             <xf:instance id="i-user-info">
-                <response><user/><password/></response>
+                <response>
+                    <user/>
+                    <password/>
+                </response>
             </xf:instance>
             
             <!-- Get User Info -->
@@ -198,10 +201,11 @@
                                                 <h4>More Information</h4>
                                                 <p class="note small indent" style="margin-top:-.5em;">
                                                 <i>*</i>The next available URI is calculated based on the last available URI in the development database and the last/highest URI in the reserved range list.</p>
+                                                <!--
                                                 <p>Last URI in the development database : <code>
                                                     <xf:output value="concat(tei:last-dev/@uri,tei:last-dev/@num + 1)"/>
                                                 </code>
-                                            </p>
+                                                </p>-->
                                                 <xf:repeat ref="tei:range">
                                                     <p>
                                                     <b>Reserved range:</b> <code>

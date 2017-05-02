@@ -11,35 +11,60 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
 declare option output:method "xml";
 declare option output:media-type "text/xml";
 
+declare variable $editor := 
+    if(request:get-attribute("org.exist.login.user")) then 
+        request:get-attribute("org.exist.login.user") 
+    else if(xmldb:get-current-user()) then 
+        xmldb:get-current-user() 
+    else '';
 
-(: Parse xml strings in text nodes into xml elements :)
-declare function local:parse-text($nodes as node()*) as item()* {
-    for $node in $nodes
-    return
+(: Any post processing to form data happens here :)
+declare function local:dispatch($nodes as node()*) as item()* {
+  for $node in $nodes
+  return
     typeswitch($node)
         case text() return 
             parse-xml-fragment($node)
-        default return local:passthru($node)
+        case element(tei:change) return
+            if($node[@who = '' and @when = '']) then
+                element { name($node) } 
+                    { 
+                        attribute who { $editor },
+                        attribute when { current-date() },
+                        'Record created by Syriaca.org webforms'
+                    }
+            else local:recurse($node)
+        case element() return local:passthru($node)
+        default return local:recurse($node)
 };
 
+(: Recurse through child nodes :)
 declare function local:passthru($node as node()*) as item()* {
-    element {name($node)} {($node/@*, local:parse-text($node/node()))}
+  element {name($node)} {($node/@*, local:dispatch($node/node()))}
 };
-let $temp := doc('/db/apps/srophe-admin/data/persons/tei/2986.xml')
-let $results := request:get-data()
+
+declare function local:recurse($node as item()) as item()* {
+    for $node in $node/node()
+    return
+        local:dispatch($node)
+};
+
+let $data := request:get-parameter('postdata','')
+let $results := fn:parse-xml($data)
 let $id := replace($results/descendant::tei:idno[1],'/tei','')      
-let $file-name := concat(tokenize($id,'/')[last()], '.xml')
-let $date := fn:current-date() 
+let $file-name := if($id != '') then concat(tokenize($id,'/')[last()], '.xml') else 'form.xml'
+let $post-processed-xml := local:dispatch($results)
+(:<TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="en">{$post-processed-xml/child::*}</TEI> :)
 return 
-    if(request:get-parameter('type', '') = 'view') then
+      if(request:get-parameter('type', '') = 'view') then
         (response:set-header("Content-type", 'text/xml'),
-        serialize($results, 
+        serialize($post-processed-xml, 
         <output:serialization-parameters>
             <output:method>xml</output:method>
             <output:media-type>text/xml</output:media-type>
         </output:serialization-parameters>))
     else if(request:get-parameter('type', '') = 'download') then
-       (response:set-header("Content-Disposition", fn:concat("attachment; filename=", $file-name)),$results)
+       (response:set-header("Content-Disposition", fn:concat("attachment; filename=", $file-name)),$post-processed-xml)
     else if(request:get-parameter('type', '') = 'save') then 
         let $data-root := (:$global:data-root:) '/db/apps/srophe-admin/data'
         let $collection :=
@@ -60,7 +85,7 @@ return
             if($collection != '' and $path-name != '') then
                 try {
                     <data code="200">
-                        <message>New record saved: {(xmldb:login("/db", "admin", ""), xmldb:store($collection, $file-name, $results))}</message>
+                        <message>New record saved: {xmldb:store($collection, $file-name, $post-processed-xml)}</message>
                     </data>
                 } catch * {
                     <data code="500">
@@ -74,9 +99,4 @@ return
     else 
         <data code="500">
             <message>General Error</message>
-        </data>
-    (:
-        <data code="500">
-            <message path="{$path-name}">Caught error {$err:code}: {$err:description}</message>
-        </data>
-        :)
+        </data> 

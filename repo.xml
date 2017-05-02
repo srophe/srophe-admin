@@ -39,6 +39,6 @@
             <option selected="true">leaflet</option>
         </maps>
     </config>
-    <!--<permissions user="srophe-admin" group="srophe" mode="rwxrwxr-x"/>-->
+    <permissions user="srophe-admin" group="srophe" mode="rwxrwxr-x"/>
     <deployed>2017-03-28T08:40:24.014-04:00</deployed>
 </meta>

@@ -136,11 +136,10 @@
                         <forename/>
                         <addName/>
                     </persName>
-                    <persName xml:id="namex-1" xml:lang="" source="" syriaca-tags="#syriaca-headword">
-                        <roleName type="" sort=""/>
-                        <forename type="" sort=""/>
-                        <addName type="" sort=""/>
-                    </persName>
+                    <persName xml:id="namex-1" syriaca-tags="#syriaca-headword">Anonymous </persName>
+                    <trait xml:lang="en">
+                        <label>anonymous</label>
+                    </trait>
                     <note/>
                     <note>
                         <quote source=""/>
