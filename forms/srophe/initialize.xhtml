@@ -15,7 +15,7 @@
         
         <!-- Latest compiled and minified JavaScript -->
         <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"/>
-                    
+        
         <xf:model id="m-initialize">
             <!-- Current status ids -->
             <xf:instance xmlns="http://www.tei-c.org/ns/1.0" id="i-ids" src="services/syr-ids.xml"/>
@@ -61,7 +61,7 @@
                     <xf:message>Bad Username/Password.</xf:message>
                 </xf:action>
             </xf:submission>
-
+            
             <xf:submission id="s-logout" ref="instance('i-user-info')" replace="instance" instance="i-user-info" method="post" serialization="none" mode="synchronous" resource="services/login.xql?logout=true()">
                 <xf:action ev:event="xforms-submit-done">
                     <xf:message>Logged out.</xf:message>
@@ -97,172 +97,184 @@
             <xf:bind nodeset="instance('i-ids')//tei:range/@end" required="true()"/>
             <xf:bind nodeset="instance('i-ids')//tei:range/@who" required="true()"/>
             <xf:bind nodeset="instance('i-ids')//tei:range/@note" required="true()"/>
+            
+            <!-- Bind for subforms -->
+            <!-- Bind uri to idno -->
+            <xf:bind nodeset="instance('i-rec')//tei:publicationStmt/tei:idno[@type='URI']" calculate="concat(instance('i-rec-id')/@uri,instance('i-rec-id')/@num,'/tei')"/>
+            <xf:bind nodeset="instance('i-rec')//tei:body/descendant::tei:idno[@type='URI'][1]" calculate="concat(instance('i-rec-id')/@uri,instance('i-rec-id')/@num)"/>
+            <!-- Bind persName to title -->
+            <xf:bind nodeset="instance('i-rec')//tei:titleStmt/tei:title[1]" calculate="instance('i-rec')//tei:person/tei:persName[@syriaca-tags ='#syriaca-headword'][1]"/>
+            <xf:bind nodeset="instance('i-rec')//tei:person/@xml:id" calculate="concat('person-',instance('i-rec-id')/@num)"/>
+            <xf:bind nodeset="instance('i-rec')//tei:place/@xml:id" calculate="concat('place-',instance('i-rec-id')/@num)"/>
         </xf:model>
     </head>
     <body class="soria" style="margin:30px;">
-            <div class="section">
-                <xi:include href="navbar.xml"/>
-                <h1><a id="formHome" href="#">
-                    <span class="glyphicon glyphicon-home" aria-hidden="true"></span></a>
-                    Syriaca.org Web Forms</h1>
-                <p class="note">Use these forms to edit existing records, to create new records or to reserve URIs for data in processes elsewhere.</p>
-                <hr/>
-                <script type="text/javascript">
+        <div class="section">
+            <xi:include href="navbar.xml"/>
+            <h1>
+                <a id="formHome" href="#">
+                    <span class="glyphicon glyphicon-home" aria-hidden="true"/>
+                </a>
+                Syriaca.org Web Forms</h1>
+            <p class="note">Use these forms to edit existing records, to create new records or to reserve URIs for data in processes elsewhere.</p>
+            <hr/>
+            <script type="text/javascript">
                     $('#formHome').click(function() {
                         location.reload();
                     });
                 </script>
-                <xf:switch>
-                    <xf:case id="URI">
-                        <!-- TODO: Add a lookup feature to return existing TEI record
+            <xf:switch>
+                <xf:case id="URI">
+                    <!-- TODO: Add a lookup feature to return existing TEI record
                         <div class="section">
                             <h3>Edit record</h3>
                             
                             <hr/>
                         </div>
                         -->
-                        <div class="section">
-                            <h3>Reserve URIs</h3>
-                            <!-- For each work type (i.e. Person/Place/Work/Manuscripts/Bibl) Reserve URIs and/or create new TEI records -->
-                            <xf:repeat nodeset="instance('i-ids')//tei:div">
-                                <div class="section" style="padding-bottom: 1em; margin:1em; border-bottom: 1px solid #ccc;">
-                                    <h4>
+                    <div class="section">
+                        <h3>Reserve URIs</h3>
+                        <!-- For each work type (i.e. Person/Place/Work/Manuscripts/Bibl) Reserve URIs and/or create new TEI records -->
+                        <xf:repeat nodeset="instance('i-ids')//tei:div">
+                            <div class="section" style="padding-bottom: 1em; margin:1em; border-bottom: 1px solid #ccc;">
+                                <h4>
                                     <xf:output ref="@class"/>
                                 </h4>
-                                    <p> Next Available URI:  <code>
-                                        <xf:output value="concat(tei:last-calculated/@uri,tei:last-calculated/@num + 1)"/>
-                                    </code>
+                                <p> Next Available URI:  <code>
+                                    <xf:output value="concat(tei:last-calculated/@uri,tei:last-calculated/@num + 1)"/>
+                                </code>
                                 </p>
-                                    <xf:trigger class="btn btn-default" appearance="minimal" ref="tei:last-calculated">
-                                        <xf:label>
+                                <xf:trigger class="btn btn-default" appearance="minimal" ref="tei:last-calculated">
+                                    <xf:label>
                                         <span class="glyphicon glyphicon-pencil"/>  Reserve URI and Create TEI</xf:label>
-                                        <xf:setvalue ev:event="DOMActivate" ref="@num" value=". + 1"/>
-                                        <xf:send ev:event="DOMActivate" submission="s-increment-uri"/>
-                                        <xf:insert ev:event="DOMActivate" ref="instance('i-rec-id')" at="last()" position="after" origin="."/>
-                                        <xf:insert ev:event="DOMActivate" ref="instance('i-rec-type')" at="last()" position="after" origin="../tei:form-type"/>
-                                        <xf:load ev:event="DOMActivate" show="embed" targetid="subform">
-                                            <xf:resource value="concat('form.xq?form=srophe/', ../tei:form-type/@type,'.xml' )"/>
-                                        </xf:load>
-                                        <xf:send ev:event="DOMActivate" submission="s-new-rec"/>
-                                        <xf:toggle ev:event="DOMActivate" case="edit-rec"/>
-                                    </xf:trigger>
-                                    <xf:trigger class="btn btn-default" appearance="minimal">
-                                        <xf:label>
+                                    <xf:setvalue ev:event="DOMActivate" ref="@num" value=". + 1"/>
+                                    <xf:send ev:event="DOMActivate" submission="s-increment-uri"/>
+                                    <xf:insert ev:event="DOMActivate" ref="instance('i-rec-id')" at="last()" position="after" origin="."/>
+                                    <xf:insert ev:event="DOMActivate" ref="instance('i-rec-type')" at="last()" position="after" origin="../tei:form-type"/>
+                                    <xf:load ev:event="DOMActivate" show="embed" targetid="subform">
+                                        <xf:resource value="concat('form.xq?form=srophe/', ../tei:form-type/@type,'.xml' )"/>
+                                    </xf:load>
+                                    <xf:send ev:event="DOMActivate" submission="s-new-rec"/>
+                                    <xf:toggle ev:event="DOMActivate" case="edit-rec"/>
+                                </xf:trigger>
+                                <xf:trigger class="btn btn-default" appearance="minimal">
+                                    <xf:label>
                                         <span class="glyphicon glyphicon-save-file"/> Reserve URI Range </xf:label>
-                                        <xf:insert ev:event="DOMActivate" context="." origin="instance('i-uri-range')//tei:range"/>
-                                        <xf:setvalue ev:event="DOMActivate" ref="tei:range[1]/@start" value="../../tei:last-calculated/@num + 1"/>
-                                        <xf:toggle ev:event="DOMActivate" case="add-range"/>
-                                    </xf:trigger>
-                                    <xf:trigger class="btn btn-default" appearance="minimal">
-                                        <xf:label>
+                                    <xf:insert ev:event="DOMActivate" context="." origin="instance('i-uri-range')//tei:range"/>
+                                    <xf:setvalue ev:event="DOMActivate" ref="tei:range[1]/@start" value="../../tei:last-calculated/@num + 1"/>
+                                    <xf:toggle ev:event="DOMActivate" case="add-range"/>
+                                </xf:trigger>
+                                <xf:trigger class="btn btn-default" appearance="minimal">
+                                    <xf:label>
                                         <span class="glyphicon glyphicon-question-sign"/> More Info </xf:label>
-                                        <xf:toggle ev:event="DOMActivate" case="more-info"/>
-                                    </xf:trigger>
-                                    <xf:switch>
-                                        <xf:case id="hide"/>
-                                        <xf:case id="add-range">
-                                            <xf:group ref="tei:range">
-                                                <div class="section indent" style="padding:1em;">
-                                                    <xf:input ref="@start">
-                                                        <xf:label>Start</xf:label>
-                                                    </xf:input>
-                                                    <xf:input ref="@end">
-                                                        <xf:label>End</xf:label>
-                                                    </xf:input>
-                                                    <xf:input ref="@who">
-                                                        <xf:label>Name of Editor</xf:label>
-                                                    </xf:input>
-                                                    <xf:textarea ref="@note">
-                                                        <xf:label>Notes</xf:label>
-                                                    </xf:textarea>  
-                                                    <br/>
-                                                    <xf:trigger class="btn btn-default" appearance="minimal">
-                                                        <xf:label>
+                                    <xf:toggle ev:event="DOMActivate" case="more-info"/>
+                                </xf:trigger>
+                                <xf:switch>
+                                    <xf:case id="hide"/>
+                                    <xf:case id="add-range">
+                                        <xf:group ref="tei:range">
+                                            <div class="section indent" style="padding:1em;">
+                                                <xf:input ref="@start">
+                                                    <xf:label>Start</xf:label>
+                                                </xf:input>
+                                                <xf:input ref="@end">
+                                                    <xf:label>End</xf:label>
+                                                </xf:input>
+                                                <xf:input ref="@who">
+                                                    <xf:label>Name of Editor</xf:label>
+                                                </xf:input>
+                                                <xf:textarea ref="@note">
+                                                    <xf:label>Notes</xf:label>
+                                                </xf:textarea>  
+                                                <br/>
+                                                <xf:trigger class="btn btn-default" appearance="minimal">
+                                                    <xf:label>
                                                         <span class="glyphicon glyphicon-save-file"/> Save </xf:label>
-                                                        <xf:setvalue ev:event="DOMActivate" ref="../tei:last-calculated/@num" value="../../tei:range/@end"/>
-                                                        <xf:send ev:event="DOMActivate" submission="s-increment-uri"/>
-                                                    </xf:trigger>
-                                                    <xf:trigger class="btn btn-default" appearance="minimal">
-                                                        <xf:label>
+                                                    <xf:setvalue ev:event="DOMActivate" ref="../tei:last-calculated/@num" value="../../tei:range/@end"/>
+                                                    <xf:send ev:event="DOMActivate" submission="s-increment-uri"/>
+                                                </xf:trigger>
+                                                <xf:trigger class="btn btn-default" appearance="minimal">
+                                                    <xf:label>
                                                         <span class="glyphicon glyphicon-minus-sign"/> Hide </xf:label>
-                                                        <xf:toggle ev:event="DOMActivate" case="hide"/>
-                                                    </xf:trigger>
-                                                </div>
-                                            </xf:group>
-                                        </xf:case>
-                                        <xf:case id="more-info">
-                                            <div style="background-color:#efefef; padding:1.5em;">
-                                                <!-- TODO: add an ability to delete ranges -->
-                                                <h4>More Information</h4>
-                                                <p class="note small indent" style="margin-top:-.5em;">
+                                                    <xf:toggle ev:event="DOMActivate" case="hide"/>
+                                                </xf:trigger>
+                                            </div>
+                                        </xf:group>
+                                    </xf:case>
+                                    <xf:case id="more-info">
+                                        <div style="background-color:#efefef; padding:1.5em;">
+                                            <!-- TODO: add an ability to delete ranges -->
+                                            <h4>More Information</h4>
+                                            <p class="note small indent" style="margin-top:-.5em;">
                                                 <i>*</i>The next available URI is calculated based on the last available URI in the development database and the last/highest URI in the reserved range list.</p>
-                                                <!--
+                                            <!--
                                                 <p>Last URI in the development database : <code>
                                                     <xf:output value="concat(tei:last-dev/@uri,tei:last-dev/@num + 1)"/>
                                                 </code>
                                                 </p>-->
-                                                <xf:repeat ref="tei:range">
-                                                    <p>
+                                            <xf:repeat ref="tei:range">
+                                                <p>
                                                     <b>Reserved range:</b> <code>
                                                         <xf:output ref="@start"/> to <xf:output ref="@end"/>
                                                     </code>
                                                     <br/>
-                                                        Notes: <xf:output ref="@note"/> &#160; <i>
+                                                    Notes: <xf:output ref="@note"/> &#160; <i>
                                                         <xf:output ref="@who"/>
                                                     </i>
-                                                    </p>
-                                                </xf:repeat>
-                                                <xf:trigger class="btn btn-default" appearance="minimal">
-                                                    <xf:label>
+                                                </p>
+                                            </xf:repeat>
+                                            <xf:trigger class="btn btn-default" appearance="minimal">
+                                                <xf:label>
                                                     <span class="glyphicon glyphicon-minus-sign"/> Hide </xf:label>
-                                                    <xf:toggle ev:event="DOMActivate" case="hide"/>
-                                                </xf:trigger>
-                                            </div>
-                                        </xf:case>
-                                    </xf:switch>
-                                </div>
-                            </xf:repeat>
-                        </div>
-                    </xf:case>
-                    <xf:case id="edit-rec">
-                        <xf:group id="subform"/>
-                    </xf:case>
-                </xf:switch>
-                <xf:dialog id="login" class="modal">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <xf:trigger class="btn btn-default modal-close pull-right top" appearance="minimal">
-                                <xf:label> </xf:label>
-                                <xf:action ev:event="DOMActivate">
-                                    <xf:hide dialog="login"/>
-                                </xf:action>
-                            </xf:trigger>
-                        </div>
-                        <div class="modal-body" style="background-color:white;">
-                            <h4>Login:</h4>
-                            <xf:group ref="instance('i-user-info')">
-                                <xf:input ref="*:user">
-                                    <xf:label>Name</xf:label>
-                                </xf:input>
-                                <xf:secret ref="*:password">
-                                    <xf:label>Password: </xf:label>
-                                </xf:secret><br/>
-                                <hr/>
-                                <xf:submit class="btn btn-default" submission="s-login" appearance="minimal">
-                                    <xf:label> Login </xf:label>
-                                </xf:submit> 
-                            </xf:group>
-                        </div>
-                        <div class="modal-footer">
-                            <xf:trigger class="btn btn-default modal-close pull-right" appearance="minimal">
-                                <xf:label> </xf:label>
-                                <xf:action ev:event="DOMActivate">
-                                    <xf:hide dialog="login"/>
-                                </xf:action>
-                            </xf:trigger>
-                        </div>
+                                                <xf:toggle ev:event="DOMActivate" case="hide"/>
+                                            </xf:trigger>
+                                        </div>
+                                    </xf:case>
+                                </xf:switch>
+                            </div>
+                        </xf:repeat>
                     </div>
-                </xf:dialog>
-            </div>
+                </xf:case>
+                <xf:case id="edit-rec">
+                    <xf:group id="subform"/>
+                </xf:case>
+            </xf:switch>
+            <xf:dialog id="login" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <xf:trigger class="btn btn-default modal-close pull-right top" appearance="minimal">
+                            <xf:label> </xf:label>
+                            <xf:action ev:event="DOMActivate">
+                                <xf:hide dialog="login"/>
+                            </xf:action>
+                        </xf:trigger>
+                    </div>
+                    <div class="modal-body" style="background-color:white;">
+                        <h4>Login:</h4>
+                        <xf:group ref="instance('i-user-info')">
+                            <xf:input ref="*:user">
+                                <xf:label>Name</xf:label>
+                            </xf:input>
+                            <xf:secret ref="*:password">
+                                <xf:label>Password: </xf:label>
+                            </xf:secret>
+                            <br/>
+                            <hr/>
+                            <xf:submit class="btn btn-default" submission="s-login" appearance="minimal">
+                                <xf:label> Login </xf:label>
+                            </xf:submit> 
+                        </xf:group>
+                    </div>
+                    <div class="modal-footer">
+                        <xf:trigger class="btn btn-default modal-close pull-right" appearance="minimal">
+                            <xf:label> </xf:label>
+                            <xf:action ev:event="DOMActivate">
+                                <xf:hide dialog="login"/>
+                            </xf:action>
+                        </xf:trigger>
+                    </div>
+                </div>
+            </xf:dialog>
+        </div>
     </body>
 </html>

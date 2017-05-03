@@ -13,11 +13,12 @@
             <div class="modal-body" style="background-color:white;">
                 <h4>Search Syriaca.org bibliography:</h4>
                 <xf:group class="input-md input-group">
-                    <xf:input id="search" ref="instance('i-search')/q" incremental="true">
-                        <xf:label>Search: </xf:label>
+                    <xf:input id="search" ref="instance('i-search')/idno" incremental="true">
+                        <xf:label>Search URI: </xf:label>
                          <!-- for each key press send the s1 search out -->
-                        <xf:send submission="s-bibl-lookup" ev:event="xforms-value-changed" ref="string-length(instance('i-search')/q) &gt; 2" class="input-group-btn"/>
+                        <xf:send submission="s-bibl-lookup" ev:event="xforms-value-changed" ref="string-length(instance('i-search')/idno) &gt; 2" class="input-group-btn"/>
                     </xf:input>
+                    <!--
                     <xf:select1 ref="instance('i-search')/type">
                         <xf:item>
                             <xf:label>Title</xf:label>
@@ -28,6 +29,7 @@
                             <xf:value>idno</xf:value>
                         </xf:item>
                     </xf:select1>
+                    -->
                 </xf:group>
                 <xf:select1 ref="instance('i-selected')/tei:TEI/child::*/@ref" appearance="full" class="checkbox select-group">
                     <xf:itemset ref="instance('i-search-results')/tei:TEI">

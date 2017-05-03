@@ -12,6 +12,7 @@ declare namespace request="http://exist-db.org/xquery/request";
 (:forms:build-instance($id):)
 declare variable $id {request:get-parameter('id', '')};
 declare variable $q {request:get-parameter('q', '')};
+declare variable $idno {request:get-parameter('idno', '')};
 declare variable $element {request:get-parameter('element', 'person')};
 declare variable $action {request:get-parameter('action', '')};
 
@@ -29,10 +30,12 @@ declare variable $data-root := '/db/apps/srophe-data/' ;
 declare function local:build-path() as xs:string*{
 if($element = 'persName') then concat("collection('",$data-root,"data/persons/tei')//tei:persName[parent::tei:person][ft:query(.,'",$q,"',local:options())]") 
 else if($element = 'placeName') then concat("collection('",$data-root,"data/places/tei')//tei:placeName[parent::tei:place][ft:query(.,'",$q,"',local:options())]")
-else if($element = 'bibl') then 
+else if($element = 'bibl') then concat("collection('",$data-root,"data/bibl/tei')//tei:idno[. = '",$idno,"/tei']/ancestor::tei:TEI/descendant::tei:titleStmt/tei:title[1]")
+(:
     if(request:get-parameter('type', 'idno')) then 
         concat("collection('",$data-root,"data/bibl/tei')//tei:idno[. = '",$q,"/tei']/ancestor::tei:TEI/descendant::tei:titleStmt/tei:title[1]")
     else concat("collection('",$data-root,"data/bibl/tei')//tei:title[parent::tei:titleStmt][ft:query(.,'",$q,"',local:options())]")
+:)    
 else if($element != '') then concat("collection('",$data-root,"data')//tei:",$element,"[ft:query(.,'",$q,"',local:options())]")
 else concat("collection('",$data-root,"data')//child::*",$element,"[ft:query(.,'",$q,"',local:options())]")
 };
@@ -46,7 +49,7 @@ else concat("collection('",$data-root,"data')//child::*",$element,"[ft:query(.,'
 }
 <persName ref="{$id}">{$name-string}</persName>
 :)
-declare function local:search-name(){
+declare function local:search(){
 <results xmlns="http://www.tei-c.org/ns/1.0" xml:lang="en">
 {
 let $hits := util:eval(local:build-path())
@@ -78,5 +81,9 @@ declare function local:options(){
     </options>
 };
 
+(:
 if($q != '') then local:search-name()
+else ()
+:)
+if($q != '' or $idno != '') then local:search()
 else ()

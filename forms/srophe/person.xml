@@ -49,6 +49,7 @@
             <xf:instance id="i-search">
                 <root xmlns="">
                     <q/>
+                    <idno>http://syriaca.org/bibl/</idno>
                     <element/>
                     <type/>
                 </root>
@@ -100,10 +101,10 @@
                     <message>Submission result</message>
                 </response>
             </xf:instance>
-                        
+            
             <!-- Look up sources  -->
             <xf:submission id="s-bibl-lookup" method="get" ref="instance('i-search')" replace="instance" instance="i-search-results" serialization="none" mode="synchronous">
-                <xf:resource value="concat('services/controlled-vocab-search.xql?element=bibl&amp;','q=',instance('i-search')//q,'*','&amp;type=',instance('i-search')//type)"/>
+                <xf:resource value="concat('services/controlled-vocab-search.xql?element=bibl&amp;','idno=',instance('i-search')//idno,'&amp;type=',instance('i-search')//type)"/>
             </xf:submission>
             <!-- Lookup names -->
             <xf:submission id="s-name-lookup" method="get" ref="instance('i-search')" replace="instance" instance="i-search-results" serialization="none" mode="synchronous">
@@ -113,15 +114,6 @@
             
             <!-- Submissions -->
             <!-- Save and view -->
-
-            <!--
-                            <xf:submission id="s-view-xml" ref="instance('i-rec')" method="post" replace="all" resource="services/view-rec.xql">
-            </xf:submission>
-            <xforms:submission id="s02" method="xml-urlencoded-post" replace="none" resource="xsltforms/txs.php?exec=returnasattachment.txs&file=mybalance.xml">
-                <xforms:message level="modeless" ev:event="xforms-submit-error">Submit error.</xforms:message>
-            </xforms:submission>
-            <xf:submission id="s-view-xml" show="new" replace="all" resource="services/submit.xql?type=view" ref="instance('i-rec')"  method="post">
-            -->
             
             <!--<xf:submission id="s-view-xml" resource="services/submit.xql?type=view" ref="instance('i-rec')" show="new" replace="all" method="post"/>-->
             <!--<xf:submission id="s-download-xml" resource="services/submit.xql?type=download" ref="instance('i-rec')" show="new" replace="all" method="post"/>-->
@@ -139,18 +131,17 @@
             <!-- view -->
             <xf:submission id="view" ref="instance('i-uri-range')" show="new" method="post" replace="all" action="form.xq?form=srophe/i-uri-range.xml"/>
             
+            <!-- Bind for subforms -->
             <!-- Bind uri to idno -->
-            <xf:bind ref="instance('i-rec')//tei:publicationStmt/tei:idno[@type='URI']" calculate="concat(instance('i-rec-id')/@uri,instance('i-rec-id')/@num,'/tei')"/>
-            <xf:bind ref="instance('i-rec')//tei:body/descendant::tei:idno[@type='URI'][1]" calculate="concat(instance('i-rec-id')/@uri,instance('i-rec-id')/@num)"/>
+            <xf:bind nodeset="instance('i-rec')//tei:publicationStmt/tei:idno[@type='URI']" calculate="concat(instance('i-rec-id')/@uri,instance('i-rec-id')/@num,'/tei')"/>
+            <xf:bind nodeset="instance('i-rec')//tei:body/descendant::tei:idno[@type='URI'][1]" calculate="concat(instance('i-rec-id')/@uri,instance('i-rec-id')/@num)"/>
             <!-- Bind persName to title -->
-            <xf:bind ref="instance('i-rec')//tei:titleStmt/tei:title[1]" calculate="instance('i-rec')//tei:person/tei:persName[@syriaca-tags ='#syriaca-headword'][1]"/>
-            <xf:bind ref="instance('i-rec')//tei:person/@xml:id" calculate="concat('person-',instance('i-rec-id')/@num)"/>
-            <xf:bind ref="instance('i-rec')//tei:person/tei:persName@xml:id" calculate="concat('name-',instance('i-rec-id')/@num,index('persName'))"/>
+            <xf:bind nodeset="instance('i-rec')//tei:titleStmt/tei:title[1]" calculate="instance('i-rec')//tei:person/tei:persName[@syriaca-tags ='#syriaca-headword'][1]"/>
+            <xf:bind nodeset="instance('i-rec')//tei:person/@xml:id" calculate="concat('person-',instance('i-rec-id')/@num)"/>
             <xf:action ev:event="xforms-ready">
                 <!-- Bind uri to idno -->
                 <xf:setvalue ev:event="DOMActivate" ref="instance('i-rec')//tei:publicationStmt/tei:idno[@type='URI']" value="concat(instance('i-rec-id')/@uri,instance('i-rec-id')/@num,'/tei')"/>
                 <xf:setvalue ev:event="DOMActivate" ref="instance('i-rec')//tei:publicationStmt/tei:idno[@type='URI']" value="concat(instance('i-rec-id')/@uri,instance('i-rec-id')/@num)"/>
-                <!--<xf:setvalue ev:event="DOMActivate" ref="instance('i-rec')//tei:publicationStmt/tei:date"  value="getXMLDate()"/>-->
             </xf:action>
         </xf:model>
     </head>
@@ -162,8 +153,8 @@
                     <!-- Record URI, passed from initialize.xhtml form -->
                     <xf:group ref="instance('i-rec-id')">
                         <p>Current record URI: <code>
-                                <xf:output value="concat(@uri,@num)"/>
-                            </code>
+                            <xf:output value="concat(@uri,@num)"/>
+                        </code>
                         </p>
                     </xf:group>
                 </div>
@@ -173,12 +164,6 @@
                             <xf:label>
                                 <span class="glyphicon glyphicon-save-file"/> Save to Database</xf:label>
                         </xf:submit>
-                        <!--
-                        <xf:submit class="btn btn-default" submission="s-view-xml" appearance="minimal">
-                            <xf:label>
-                                <span class="glyphicon glyphicon-save-file"/> View XML </xf:label>
-                        </xf:submit>
-                        -->
                         <xf:submit class="btn btn-default" submission="s-download-xml" appearance="minimal">
                             <xf:label>
                                 <span class="glyphicon glyphicon-save-file"/> Download XML </xf:label>

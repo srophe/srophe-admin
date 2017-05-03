@@ -8,6 +8,9 @@
                     <xf:label/>
                     <xf:delete ev:event="DOMActivate" ref="."/>
                 </xf:trigger>
+                <xf:action ev:event="xforms-ready" ref="@xml:id">
+                    <xf:setvalue ref="." calculate="concat('name',instance('i-rec-id')/@num,'-',count(instance('i-rec')//tei:person/tei:persName))"/>
+                </xf:action>
             </legend>
             <div class="panel">
                 <div class="form-inline">
@@ -132,7 +135,9 @@
                     <xf:trigger class="btn btn-default add" appearance="minimal" ref="self::node()[not(@syriaca-tags = '#anonymous-description')]">
                         <xf:label>Anonymous Description </xf:label>
                         <xf:insert ev:event="DOMActivate" context="." at="." origin="instance('i-template')//tei:person/tei:persName/@syriaca-tags[. = '#anonymous-description']"/>
-                        <xf:insert ev:event="DOMActivate" ref="instance('i-rec')//tei:person" at="last()" position="after" origin="instance('i-template')//tei:person/tei:trait[1]"/>
+                        <xf:insert ev:event="DOMActivate" ref="instance('i-rec')//tei:person/tei:persName" at="last()" position="after" origin="instance('i-template')//tei:person/tei:trait[1]"/>
+                        <xf:insert ev:event="DOMActivate" ref="instance('i-rec')//tei:person/tei:persName" position="before" origin="instance('i-template')//tei:person/tei:persName[@syriaca-tags = '#syriaca-headword'][2]"/>                          
+                        <xf:setvalue ev:event="DOMActivate" ref="instance('i-rec')//tei:person/tei:persName[@syriaca-tags = '#syriaca-headword'][1]" value="concat('Anonymous ', instance('i-rec-id')/@num)"/>
                     </xf:trigger>
                     <xf:output ref="@syriaca-tags[. = '#syriaca-headword']">
                         <xf:label class="inline">Headword: </xf:label>
