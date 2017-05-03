@@ -2,7 +2,7 @@
 <?xml-stylesheet href="xsl/xsltforms.xsl" type="text/xsl"?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsltforms="http://www.agencexml.com/xsltforms" xmlns:xf="http://www.w3.org/2002/xforms" xsltforms:dummy="dummy">
     <head>
-        <title>i-uri-range.xml</title>
+        <title>Download TEI Record</title>
         <xf:model>
             <xf:instance id="getter">
                 <data/>

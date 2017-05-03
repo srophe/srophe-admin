@@ -144,7 +144,8 @@
             <xf:bind ref="instance('i-rec')//tei:body/descendant::tei:idno[@type='URI'][1]" calculate="concat(instance('i-rec-id')/@uri,instance('i-rec-id')/@num)"/>
             <!-- Bind persName to title -->
             <xf:bind ref="instance('i-rec')//tei:titleStmt/tei:title[1]" calculate="instance('i-rec')//tei:person/tei:persName[@syriaca-tags ='#syriaca-headword'][1]"/>
-            
+            <xf:bind ref="instance('i-rec')//tei:person/@xml:id" calculate="concat('person-',instance('i-rec-id')/@num)"/>
+            <xf:bind ref="instance('i-rec')//tei:person/tei:persName@xml:id" calculate="concat('name-',instance('i-rec-id')/@num,index('persName'))"/>
             <xf:action ev:event="xforms-ready">
                 <!-- Bind uri to idno -->
                 <xf:setvalue ev:event="DOMActivate" ref="instance('i-rec')//tei:publicationStmt/tei:idno[@type='URI']" value="concat(instance('i-rec-id')/@uri,instance('i-rec-id')/@num,'/tei')"/>

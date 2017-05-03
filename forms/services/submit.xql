@@ -12,8 +12,8 @@ declare option output:method "xml";
 declare option output:media-type "text/xml";
 
 declare variable $editor := 
-    if(request:get-attribute("org.exist.login.user")) then 
-        request:get-attribute("org.exist.login.user") 
+    if(request:get-attribute(concat($global:login-domain, '.user'))) then 
+        request:get-attribute(concat($global:login-domain, '.user')) 
     else if(xmldb:get-current-user()) then 
         xmldb:get-current-user() 
     else '';
@@ -65,8 +65,12 @@ return
         </output:serialization-parameters>))
     else if(request:get-parameter('type', '') = 'download') then
        (response:set-header("Content-Disposition", fn:concat("attachment; filename=", $file-name)),$post-processed-xml)
-    else if(request:get-parameter('type', '') = 'save') then 
-        let $data-root := (:$global:data-root:) '/db/apps/srophe-admin/data'
+    else if(request:get-parameter('type', '') = 'save') then
+        <response code="400">
+            <message>Please download the record and save to Syriaca.org's github repository.</message>
+        </response> 
+        (:
+        let $data-root := $global:data-root
         let $collection :=
             if(contains($id,'/place/')) then concat($data-root,'/places/tei')
             else if(contains($id,'/person')) then concat($data-root,'/persons/tei')
@@ -96,7 +100,8 @@ return
                 <data code="500">
                    <message>Error building path id={$id} Path: {$path-name} Collection: {$collection}</message>
                 </data> 
+    :)                
     else 
-        <data code="500">
+        <response code="500">
             <message>General Error</message>
-        </data> 
+        </response> 

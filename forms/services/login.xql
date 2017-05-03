@@ -6,6 +6,7 @@ xquery version "3.0";
 declare namespace tei="http://www.tei-c.org/ns/1.0";
 declare namespace request="http://exist-db.org/xquery/request";
 
+import module namespace login="http://exist-db.org/xquery/login" at "resource:org/exist/xquery/modules/persistentlogin/login.xql";
 import module namespace functx="http://www.functx.com";
 import module namespace global="http://syriaca.org/global" at "../../modules/lib/global.xqm";
 
@@ -16,10 +17,9 @@ let $user :=
         request:get-attribute(concat($global:login-domain, '.user'))
     else ()    
 return 
-    if(request:get-parameter('view', '') = 'current') then
+(login:set-user($global:login-domain, (), true()),
+    if(request:get-parameter('user', '') != '') then
         <response><user>{$user}</user><password/></response>
     else if(request:get-parameter('logout', ()) = true()) then 
-        <response><user></user><password/></response>
-    else if(request:get-parameter('user', '') != '') then
-        <response><user>{$user}</user><password/></response>         
-    else  <response><user>{$user}</user><password/></response>
+        <response><user></user><password/></response>          
+    else  <response><user>{$user}</user><password/></response>)

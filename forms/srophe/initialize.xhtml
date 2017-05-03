@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet href="http://wwwb.library.vanderbilt.edu/exist/apps/xsltforms/xsltforms.xsl" type="text/xsl"?><?xsltforms-options debug="yes"?><?css-conversion no?><?xml-model href="http://www.oxygenxml.com/1999/xhtml/xhtml-xforms.nvdl" schematypens="http://purl.oclc.org/dsdl/nvdl/ns/structure/1.0"?>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xf="http://www.w3.org/2002/xforms" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:tei="http://www.tei-c.org/ns/1.0">
-    <!-- Depreiciated -->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xf="http://www.w3.org/2002/xforms">
     <head>
         <title>Syriaca.org: Create New Record</title>
         <meta name="author" content="wsalesky at gmail.com"/>
@@ -52,9 +51,9 @@
             </xf:instance>
             
             <!-- Get User Info -->
-            <xf:submission id="s-current-user" ref="instance('i-user-info')" replace="instance" instance="i-user-info" method="get" serialization="none" mode="synchronous" resource="services/login.xql?action=current"/>
+            <xf:submission id="s-current-user" ref="instance('i-user-info')" replace="instance" instance="i-user-info" method="get" serialization="none" mode="synchronous" resource="services/login.xql?view=current"/>
             
-            <xf:submission id="s-login" resource="services/login.xql?action=login" ref="instance('i-user-info')" replace="instance" instance="i-user-info" method="post">
+            <xf:submission id="s-login" resource="services/login.xql" ref="instance('i-user-info')" replace="instance" instance="i-user-info" method="post">
                 <xf:action ev:event="xforms-submit-done">
                     <xf:hide dialog="login"/>
                 </xf:action>
@@ -63,9 +62,9 @@
                 </xf:action>
             </xf:submission>
 
-            <xf:submission id="s-logout" ref="instance('i-user-info')" replace="instance" instance="i-user-info" method="post" serialization="none" mode="synchronous" resource="services/login.xql?logout=true">
+            <xf:submission id="s-logout" ref="instance('i-user-info')" replace="instance" instance="i-user-info" method="post" serialization="none" mode="synchronous" resource="services/login.xql?logout=true()">
                 <xf:action ev:event="xforms-submit-done">
-                    <xf:message>Logged out good job</xf:message>
+                    <xf:message>Logged out.</xf:message>
                 </xf:action>
                 <xf:action ev:event="xforms-submit-error">
                     <xf:message>Bad Username/Password.</xf:message>
@@ -98,18 +97,21 @@
             <xf:bind nodeset="instance('i-ids')//tei:range/@end" required="true()"/>
             <xf:bind nodeset="instance('i-ids')//tei:range/@who" required="true()"/>
             <xf:bind nodeset="instance('i-ids')//tei:range/@note" required="true()"/>
-            <!-- Bind new URI to appropriate idnos  
-            <xf:bind ref="instance('i-rec')//tei:publicationStmt/tei:idno[@type='URI']" calculate="concat(instance('i-rec-id')//id,'/tei')"/>
-            <xf:bind ref="instance('i-rec')//tei:body/descendant/tei:idno[@type='URI'][1]" calculate="concat(instance('i-rec-id')//id)"/>
-            -->
         </xf:model>
     </head>
     <body class="soria" style="margin:30px;">
             <div class="section">
                 <xi:include href="navbar.xml"/>
-                <h1>Syriaca.org Web Forms</h1>
+                <h1><a id="formHome" href="#">
+                    <span class="glyphicon glyphicon-home" aria-hidden="true"></span></a>
+                    Syriaca.org Web Forms</h1>
                 <p class="note">Use these forms to edit existing records, to create new records or to reserve URIs for data in processes elsewhere.</p>
                 <hr/>
+                <script type="text/javascript">
+                    $('#formHome').click(function() {
+                        location.reload();
+                    });
+                </script>
                 <xf:switch>
                     <xf:case id="URI">
                         <!-- TODO: Add a lookup feature to return existing TEI record
@@ -143,13 +145,6 @@
                                         </xf:load>
                                         <xf:send ev:event="DOMActivate" submission="s-new-rec"/>
                                         <xf:toggle ev:event="DOMActivate" case="edit-rec"/>
-                                        <!--
-                                        <xf:load ev:event="DOMActivate" show="embed" targetid="subform" if="not(instance('i-submission')//*:response[@status='fail'])">
-                                            <xf:resource value="concat('form.xq?form=srophe/', ../@form-type,'.xml' )"/>
-                                        </xf:load>
-                                        <xf:send ev:event="DOMActivate" submission="s-new-rec" if="not(instance('i-submission')//*:response[@status='fail'])"/>
-                                        <xf:toggle ev:event="DOMActivate" case="edit-rec" if="not(instance('i-submission')//*:response[@status='fail'])"/>
-                                        -->
                                     </xf:trigger>
                                     <xf:trigger class="btn btn-default" appearance="minimal">
                                         <xf:label>
@@ -233,14 +228,6 @@
                         <xf:group id="subform"/>
                     </xf:case>
                 </xf:switch>
-                <xf:trigger>
-                    <xf:label>Unload Subform (Admin)</xf:label>
-                    <xf:action ev:event="DOMActivate">
-                        <xf:message>DOMActivate in Subform</xf:message>
-                        <xf:unload targetid="subform"/>
-                        <xf:toggle ev:event="DOMActivate" case="URI"/>
-                    </xf:action>
-                </xf:trigger>
                 <xf:dialog id="login" class="modal">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -259,7 +246,8 @@
                                 </xf:input>
                                 <xf:secret ref="*:password">
                                     <xf:label>Password: </xf:label>
-                                </xf:secret>&#160;&#160;
+                                </xf:secret><br/>
+                                <hr/>
                                 <xf:submit class="btn btn-default" submission="s-login" appearance="minimal">
                                     <xf:label> Login </xf:label>
                                 </xf:submit> 

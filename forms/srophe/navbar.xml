@@ -24,8 +24,17 @@
                 <li>
                     <a href="../browse-comments.html">Comments</a>
                 </li>
-                <li>
-                    <a href="../forms/form.xq?form=srophe/initialize.xhtml">Edit</a>
+                <li xmlns="http://www.w3.org/1999/xhtml" class="dropdown">
+                    <a href="../forms/form.xq?form=srophe/initialize.xhtml" class="dropdown-toggle lonely-caret" data-toggle="dropdown">
+                       TEI Forms &#160;<b class="caret"/>
+                    </a>
+                    <ul class="dropdown-menu pull-right">
+                        <li><a href="../forms/form.xq?form=srophe/initialize.xhtml">Reserve URI and create TEI</a></li>
+                        <li role="presentation" class="divider"/>
+                        <li><a href="../forms/form.xq?form=srophe/person.xml">Person Records </a></li>
+                        <li><a href="../forms/form.xq?form=srophe/place.xml">Place Records </a></li>
+                        <li><a href="../forms/form.xq?form=srophe/work.xml">Work Records </a></li>
+                    </ul>
                 </li>
             </ul>
             <ul class="nav navbar-nav pull-right">
@@ -33,7 +42,7 @@
                     <xf:submit submission="s-logout" appearance="minimal" ref="instance('i-user-info')//*:user[. != '']">
                         <xf:label> <span class="glyphicon glyphicon-user"/>&#160; <xf:output ref="instance('i-user-info')//*:user"/>&#160; <span class="glyphicon glyphicon-remove"/>  </xf:label>
                     </xf:submit>
-                    <xf:trigger class="btn btn-default" appearance="minimal" ref="instance('i-user-info')//*:user[. = '']">
+                    <xf:trigger appearance="minimal" ref="instance('i-user-info')//*:user[. = '']">
                         <xf:label> <span class="glyphicon glyphicon-user"/> &#160; Login </xf:label>
                         <xf:action ev:event="DOMActivate">
                             <xf:show dialog="login"/>
