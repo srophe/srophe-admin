@@ -1,4 +1,4 @@
-xquery version "1.0";
+xquery version "3.1";
 
 import module namespace request="http://exist-db.org/xquery/request";
 import module namespace global="http://syriaca.org/global" at "modules/lib/global.xqm";
@@ -9,6 +9,7 @@ declare variable $exist:path external;
 declare variable $exist:resource external;
 declare variable $exist:controller external;
 declare variable $exist:prefix external;
+
 
 declare variable $logout := request:get-parameter("logout", ());
 declare variable $login := request:get-parameter("user", ());
@@ -28,14 +29,20 @@ else if ($exist:path eq "/oauth") then
             <set-header name="Cache-Control" value="max-age=3600, must-revalidate"/>
         </forward>
     </dispatch>
-else if ($logout or $login) then (
-    login:set-user("org.exist.demo.login", (), false()),
+else if (ends-with($exist:resource, ".xql")) then (
+    login:set-user($global:login-domain, (), false()),
+    <ignore xmlns="http://exist.sourceforge.net/NS/exist">
+        <cache-control cache="no"/>
+    </ignore>
+
+) else if ($logout or $login) then (
+    login:set-user($global:login-domain, (), false()),
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <redirect url="{replace(request:get-uri(), "^(.*)\?", "$1")}"/>
     </dispatch>
-)
-(: Pass all requests to HTML files through view.xql, which handles HTML templating :)
-else if (ends-with($exist:resource, ".html")) then
+
+) else if (ends-with($exist:resource, ".html")) then (
+    login:set-user($global:login-domain, (), false()),
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <view>
             <forward url="{$exist:controller}/modules/view.xql">
@@ -49,7 +56,7 @@ else if (ends-with($exist:resource, ".html")) then
             <forward url="{$exist:controller}/modules/view.xql"/>
         </error-handler>
     </dispatch>
-
+)
 else if (contains($exist:path, "/$srophe-shared/")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <forward url="/{substring-after($global:public-view-base,'/exist/apps/')}/{substring-after($exist:path, '/$srophe-shared/')}">
@@ -73,9 +80,11 @@ else if (contains($exist:path, "/resources/")) then
         </forward>
     </dispatch>
 else if (contains($exist:path, "/forms/")) then
+(
+    login:set-user($global:login-domain, (), false()),
     <ignore xmlns="http://exist.sourceforge.net/NS/exist">
         <cache-control cache="no"/>
-    </ignore>
+    </ignore>)
 else
     <ignore xmlns="http://exist.sourceforge.net/NS/exist">
         <cache-control cache="yes"/>

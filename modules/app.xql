@@ -37,7 +37,7 @@ declare function app:tei2html($nodes as node()*) {
  : Check current user, show username if loged in, otherwise 'Guest'
 :)
 declare function app:username($node as node(), $model as map(*)) {
-    let $user:= request:get-attribute("org.exist.demo.login.user")
+    let $user:= request:get-attribute(concat($global:login-domain,'.user'))
     let $name :=
         if ($user) then 
             if(sm:get-account-metadata($user, xs:anyURI('http://axschema.org/namePerson')) != '') then

@@ -4,6 +4,8 @@ module namespace global="http://syriaca.org/global";
 declare namespace tei="http://www.tei-c.org/ns/1.0";
 declare namespace html="http://www.w3.org/1999/xhtml";
 
+declare variable $global:login-domain := "org.exist.srophe" (:"org.exist.login":);
+
 (: Find app root, borrowed from config.xqm :)
 declare variable $global:app-root :=
     let $rawPath := system:get-module-load-path()
