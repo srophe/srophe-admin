@@ -11,9 +11,7 @@
                 </xf:trigger>
             </legend>
             <div class="panel">
-                <xf:input ref=".">
-                    <xf:label/>
-                </xf:input>
+                <xf:textarea ref="tei:note" incremental="true"/><br/>
                 <xi:include href="source-attr.xml"/>
                 <xi:include href="date-attr.xml"/>
             </div>

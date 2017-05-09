@@ -145,7 +145,7 @@
                     </note>
                     <idno type="URI"/>
                     <sex source=""/>
-                    <state source=""/>
+                    <state source=""><note></note></state>
                     <event source=""/>
                     <birth/>
                     <birth when="" to="" from="" notAfter="" notBefore="" source=""/>
