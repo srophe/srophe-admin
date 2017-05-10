@@ -34,6 +34,30 @@ declare function local:dispatch($nodes as node()*) as item()* {
                         'Record created by Syriaca.org webforms'
                     }
             else local:recurse($node)
+        case element(tei:persName) return
+            if($node/parent::tei:person) then 
+                  element { name($node) } 
+                    { 
+                        attribute xml:id { concat('name',tokenize($node/ancestor::tei:TEI/descendant::tei:idno[1],'/')[5],'-'count($node/preceding-sibling::tei:persName) + 1) },
+                        local:recurse($node)
+                    }
+            else local:recurse($node) 
+        case element(tei:placeName) return
+            if($node/parent::tei:place) then 
+                  element { name($node) } 
+                    { 
+                        attribute xml:id { concat('name',tokenize($node/ancestor::tei:TEI/descendant::tei:idno[1],'/')[5],'-'count($node/preceding-sibling::tei:placeName) + 1) },
+                        local:recurse($node)
+                    }
+            else local:recurse($node)  
+        case element(tei:title) return
+            if($node/parent::tei:bibl[parent::tei:body]) then 
+                  element { name($node) } 
+                    { 
+                        attribute xml:id { concat('name',tokenize($node/ancestor::tei:TEI/descendant::tei:idno[1],'/')[5],'-'count($node/preceding-sibling::tei:title) + 1) },
+                        local:recurse($node)
+                    }
+            else local:recurse($node)              
         case element() return local:passthru($node)
         default return local:recurse($node)
 };
