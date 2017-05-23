@@ -38,7 +38,7 @@ declare function local:dispatch($nodes as node()*) as item()* {
             if($node/parent::tei:person) then 
                   element { name($node) } 
                     { 
-                        attribute xml:id { concat('name',tokenize($node/ancestor::tei:TEI/descendant::tei:idno[1],'/')[5],'-'count($node/preceding-sibling::tei:persName) + 1) },
+                        attribute xml:id { concat('name',tokenize($node/ancestor::tei:TEI/descendant::tei:idno[1],'/')[5],'-',count($node/preceding-sibling::tei:persName) + 1) },
                         local:recurse($node)
                     }
             else local:recurse($node) 
@@ -46,7 +46,7 @@ declare function local:dispatch($nodes as node()*) as item()* {
             if($node/parent::tei:place) then 
                   element { name($node) } 
                     { 
-                        attribute xml:id { concat('name',tokenize($node/ancestor::tei:TEI/descendant::tei:idno[1],'/')[5],'-'count($node/preceding-sibling::tei:placeName) + 1) },
+                        attribute xml:id { concat('name',tokenize($node/ancestor::tei:TEI/descendant::tei:idno[1],'/')[5],'-',count($node/preceding-sibling::tei:placeName) + 1) },
                         local:recurse($node)
                     }
             else local:recurse($node)  
@@ -54,7 +54,7 @@ declare function local:dispatch($nodes as node()*) as item()* {
             if($node/parent::tei:bibl[parent::tei:body]) then 
                   element { name($node) } 
                     { 
-                        attribute xml:id { concat('name',tokenize($node/ancestor::tei:TEI/descendant::tei:idno[1],'/')[5],'-'count($node/preceding-sibling::tei:title) + 1) },
+                        attribute xml:id { concat('name',tokenize($node/ancestor::tei:TEI/descendant::tei:idno[1],'/')[5],'-',count($node/preceding-sibling::tei:title) + 1) },
                         local:recurse($node)
                     }
             else local:recurse($node)              
