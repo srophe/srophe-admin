@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <meta xmlns="http://exist-db.org/xquery/repo">
-    <description>Syriaca.org: The Syriac Reference Portal Administrative Pages</description>
+    <description>Syriaca.org: Administrative Pages</description>
     <author>Syriaca.org</author>
     <website>http://syriaca.org/</website>
     <status>beta</status>
@@ -12,7 +12,7 @@
     <finish>post-install.xql</finish>
     <config>
         <!-- App title -->
-        <title>Syriaca.org: The Syriac Reference Portal Administrative Forms</title>
+        <title>Syriaca.org: Administrative Pages</title>
         <!-- App description -->
         <description>A collaborative research project publishling online reference works concerning the
             culture, history, and literature of Syriac communities from antiquity to the present.</description>
