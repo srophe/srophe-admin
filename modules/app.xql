@@ -232,6 +232,10 @@ return
         </tr>
 };
 
+(:
+ : @depreciated, comments should be made through Persieds
+:)
+(:
 declare function app:browse-comments($node as node(), $model as map(*)){
 let $browse-count := count($model("browse-comments"))
 return
@@ -242,32 +246,7 @@ return
             <tr>
                 <th class="status">Status</th>
                 <th class="idno">ID</th>
-                <th class="Title">Title
-               <!-- <ul class="pagination nav nav-tabs pull-right">
-                        <li>
-                         <div class="btn-group">
-                             <div class="dropdown"><button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">View <span class="caret"/></button>
-                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                     <li role="presentation"><a role="menuitem" tabindex="-1" href="browse.html?collection-title={$app:collection-title}" id="published">All</a></li>
-                                     <li role="presentation"><a role="menuitem" tabindex="-1" href="browse.html?collection-title={$app:collection-title}&amp;view=published" id="published">Published</a></li>
-                                     <li role="presentation"><a role="menuitem" tabindex="-1" href="browse.html?collection-title={$app:collection-title}&amp;view=draft" id="draft">Draft</a></li>
-                                     <li role="presentation"><a role="menuitem" tabindex="-1" href="browse.html?collection-title={$app:collection-title}&amp;view=underReview" id="draft">Under Review</a></li>
-                                 </ul>
-                             </div>
-                         </div>
-                        </li>
-                        <li>
-                         <div class="btn-group">
-                             <div class="dropdown"><button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">Sort <span class="caret"/></button>
-                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                     <li role="presentation"><a role="menuitem" tabindex="-1" href="browse.html?collection-title={$app:collection-title}&amp;sort=alpha" id="alpha">Alphabetical (Title)</a></li>
-                                     <li role="presentation"><a role="menuitem" tabindex="-1" href="browse.html?collection-title={$app:collection-title}&amp;sort=num" id="num">ID No</a></li>
-                                 </ul>
-                             </div>
-                         </div>
-                        </li>
-                </ul>   -->
-                </th>
+                <th class="Title">Title</th>
             </tr>
         </thead>
         <tbody>
@@ -296,6 +275,7 @@ return
     </table>
 </div>
 };
+:)
 
 declare function app:rec-status($node as node(), $model as map(*)){
     if($app:id != '') then

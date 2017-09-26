@@ -1,4 +1,4 @@
-<package xmlns="http://expath.org/ns/pkg" name="http://syriaca.org/logar-admin" abbrev="logar-admin" version="0.30" spec="1.0">
+<package xmlns="http://expath.org/ns/pkg" name="http://syriaca.org/logar-admin" abbrev="logar-admin" version="0.31" spec="1.0">
     <title>Logar: Administrative Pages</title>
     <dependency package="http://exist-db.org/apps/shared"/>
 </package>
