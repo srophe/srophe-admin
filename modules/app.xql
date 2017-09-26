@@ -16,21 +16,22 @@ declare variable $app:collection-title {request:get-parameter('collection-title'
 declare variable $app:start {request:get-parameter('start', 1) cast as xs:integer};
 declare variable $app:perpage {request:get-parameter('perpage', 25) cast as xs:integer};
 
+(: App title from repo.xml :)
+declare %templates:wrap function app:app-title($node as node(), $model as map(*)) as text()? {
+    $global:app-title
+};
+
+(: App logo from repo.xml :)
+declare %templates:wrap function app:app-logo($node as node(), $model as map(*)) as node()? {
+    if($global:app-logo != '') then <img src="{$global:app-logo}" title="{$global:app-title}"/> else ()
+};
+
 (:~
  : Get selected record.
  : $app:id record URI
 :)
 declare function app:get-rec($node as node(), $model as map(*)){
     map {"data" := collection($global:data-root)//tei:idno[@type='URI'][. = $app:id]/ancestor::tei:TEI}
-};
-
-(:~
- : Transform tei to html
- : @param $node data passed to transform
- : @depreicated
-:)
-declare function app:tei2html($nodes as node()*) {
-    transform:transform($nodes, doc('../../srophe/resources/xsl/tei2html.xsl'),() )
 };
 
 (:~
@@ -208,7 +209,7 @@ declare function app:browse-list($node, $model){
 let $recs :=
         for $r in $model("browse-recs")/ancestor::tei:TEI
         let $title := $r/descendant::tei:title[parent::tei:titleStmt][@level = 'a']/text()
-        let $id := $r/descendant::tei:publicationStmt/tei:idno[starts-with(.,'http://syriaca.org/')][1]/text()
+        let $id := $r/descendant::tei:publicationStmt/tei:idno[starts-with(.,$global:base-uri)][1]/text()
         let $id := replace($id, '/tei','')
         let $num := xs:integer(tokenize($id,'/')[last()])
         let $sort := if($app:sort = 'num') then xs:integer($num) else $title[1]
@@ -217,7 +218,7 @@ let $recs :=
 for $rec at $n in subsequence($recs, $app:start, 25)
 let $title := $rec/descendant::tei:titleStmt/tei:title[@level = 'a']/node()
 let $status := string($rec/descendant::tei:revisionDesc/@status)
-let $id := replace($rec/descendant::tei:publicationStmt/tei:idno[starts-with(.,'http://syriaca.org/')][1]/text(),'/tei','')
+let $id := replace($rec/descendant::tei:publicationStmt/tei:idno[starts-with(.,$global:base-uri)][1]/text(),'/tei','')
 let $num := tokenize($id,'/')[last()]
 return
         <tr class="status {$status}">
@@ -480,7 +481,7 @@ return
  : $style bootstrap style for panels, default is 'primary'
 :)
 declare function app:index-dashboard($node as node(), $model as map(*), $collection-title as xs:string?, $collection-icon as xs:string?, $style as xs:string?){
-    let $coll-path := concat("collection('",$global:data-root,"')//tei:title[. = '",$collection-title,"']")
+    let $coll-path := if($collection-title != '') then concat("collection('",$global:data-root,"')//tei:title[. = '",$collection-title,"']") else concat("collection('",$global:data-root,"')//tei:TEI")
     let $count := count(util:eval($coll-path))
     let $icon-style := if($collection-icon !='') then $collection-icon else 'file'
     let $panel-style := if($style !='') then $style else 'primary'
@@ -490,7 +491,7 @@ declare function app:index-dashboard($node as node(), $model as map(*), $collect
                 <div class="row">
                     <div class="col-xs-3"><i class="glyphicon glyphicon-{$icon-style}"></i></div>
                         <div class="col-xs-9 text-right">
-                            <div class="huge">{$count}</div><div> {$collection-title} </div>
+                            <div class="huge">{$count}</div><div> {if($collection-title != '') then $collection-title else 'Records Available' } </div>
                         </div>
                     </div>
                 </div>

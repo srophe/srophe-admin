@@ -18,8 +18,8 @@
             culture, history, and literature of Syriac communities from antiquity to the present.</description>
         <!-- Contact email -->
         <contact>info@syriaca.org</contact>
-        <!-- Logo name (assumes path to logo is $app-root/resources/img/) -->
-        <logo>syriaca-logo.png</logo>
+        <!-- Logo name and location relative to app root -->
+        <logo>/</logo>
         <!-- Web Site URL -->
         <url>http://syriaca.org/</url>
         <!-- Root of app for building dynamic links. Default is eXist app root -->
@@ -33,11 +33,6 @@
         <comments-root>srophe-comments</comments-root>
         <!-- Base URI for identifiers in app data -->
         <base-uri>http://syriaca.org</base-uri>
-        <!-- Map rendering -->
-        <maps>
-            <option>google</option>
-            <option selected="true">leaflet</option>
-        </maps>
     </config>
     <permissions user="srophe-admin" group="srophe" mode="rwxrwxr-x"/>
     <deployed>2017-03-28T08:40:24.014-04:00</deployed>
