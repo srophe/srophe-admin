@@ -1,44 +1,39 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <meta xmlns="http://exist-db.org/xquery/repo">
-    <description>Syriaca.org: The Syriac Reference Portal Administrative Pages</description>
-    <author>Syriaca.org</author>
-    <website>http://syriaca.org/</website>
+    <description>Logar: Administrative Pages</description>
+    <author>Winona Salesky</author>
+    <website>http://logarandes.org/</website>
     <status>beta</status>
     <license>GNU-LGPL</license>
     <copyright>true</copyright>
     <type>application</type>
-    <target>srophe-admin</target>
+    <target>logar-admin</target>
     <prepare>pre-install.xql</prepare>
     <finish>post-install.xql</finish>
     <config>
         <!-- App title -->
-        <title>Syriaca.org: The Syriac Reference Portal Administrative Forms</title>
+        <title>Logar: Administrative Pages</title>
         <!-- App description -->
         <description>A collaborative research project publishling online reference works concerning the
             culture, history, and literature of Syriac communities from antiquity to the present.</description>
         <!-- Contact email -->
         <contact>info@syriaca.org</contact>
-        <!-- Logo name (assumes path to logo is $app-root/resources/img/) -->
-        <logo>syriaca-logo.png</logo>
+        <!-- Logo name (path from app root) -->
+        <logo></logo>
         <!-- Web Site URL -->
-        <url>http://syriaca.org/</url>
+        <url>http://logarandes.org/</url>
         <!-- Root of app for building dynamic links. Default is eXist app root -->
-        <nav-base>/exist/apps/srophe-admin</nav-base>
+        <nav-base>/exist/apps/logar-admin</nav-base>
         <!-- Root for public view of records, allows code sharing accross admin and base app -->
-        <public-view>/exist/apps/srophe</public-view>
+        <public-view>/exist/apps/logar</public-view>
         <!-- eXist app root for app deployment-->
-        <app-root>srophe-admin</app-root>
+        <app-root>logar-admin</app-root>
         <!-- eXist data app root for gazetteer data -->
-        <data-root>srophe-data</data-root>
-        <comments-root>srophe-comments</comments-root>
+        <data-root>logar-data</data-root>
+        <comments-root>logar-comments</comments-root>
         <!-- Base URI for identifiers in app data -->
-        <base-uri>http://syriaca.org</base-uri>
-        <!-- Map rendering -->
-        <maps>
-            <option>google</option>
-            <option selected="true">leaflet</option>
-        </maps>
+        <base-uri>http://logarandes.org</base-uri>
     </config>
-    <permissions user="srophe-admin" group="srophe" mode="rwxrwxr-x"/>
-    <deployed>2017-03-28T08:40:24.014-04:00</deployed>
+    <permissions user="logar-admin" group="logar" mode="rwxrwxr-x"/>
+    
+<deployed>2017-09-26T10:13:29.189-04:00</deployed>
 </meta>
