@@ -18,13 +18,13 @@
         <!-- Contact email -->
         <contact>info@syriaca.org</contact>
         <!-- Logo name and location relative to app root -->
-        <logo></logo>
+        <logo/>
         <!-- Web Site URL -->
         <url>http://syriaca.org/</url>
         <!-- Root of app for building dynamic links. Default is eXist app root -->
         <nav-base>/exist/apps/srophe-admin</nav-base>
         <!-- Root for public view of records, allows code sharing accross admin and base app -->
-        <public-view>/exist/apps/srophe</public-view>
+        <public-view>srophe</public-view>
         <!-- eXist app root for app deployment-->
         <app-root>srophe-admin</app-root>
         <!-- eXist data app root for gazetteer data -->
@@ -34,5 +34,6 @@
         <base-uri>http://syriaca.org</base-uri>
     </config>
     <permissions user="srophe-admin" group="srophe" mode="rwxrwxr-x"/>
-    <deployed>2017-03-28T08:40:24.014-04:00</deployed>
+    
+<deployed>2017-09-27T13:02:17.489-04:00</deployed>
 </meta>
