@@ -1,12 +1,20 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
     <div class="container">
-        <div class="row rec-review">
-            <div data-template="app:get-rec">
-                <div data-template="app:rec-dashboard"/>
+        <div class="row rec-review" data-template="app:get-rec">
+            <div class="col-md-2 top-padding">
+                <span data-template="app:rec-status"/>
+                <ul class="nav nav-pills nav-stacked top-padding">
+                    <li class="active"><a href="#tab_rec" data-toggle="pill"> <i class="glyphicon glyphicon-file"></i> Review Record</a></li>
+                    <li><a href="#tab_tei" data-toggle="pill"> <i class="glyphicon glyphicon-file"></i> View TEI</a></li>
+                    <li><a href="#tab_change" data-toggle="pill"><i class="glyphicon glyphicon-stats"></i> Review Changes</a></li>
+                    <li><a href="#tab_comments" data-toggle="pill"><i class="glyphicon glyphicon-comment"></i> Comments </a></li>
+                    <li><span data-template="app:submit-perseids-link"><a href="javascript:poptastic('modules/services/sosol-submit.xql?id={$app:id}')"> Submit to Perseids </a></span></li>
+                    <li><span data-template="app:download-link"><a href="modules/download.xql?id={$app:id}"> Download TEI</a></span></li>
+                </ul>
             </div>
+            <div data-template="app:record-view"/>
         </div>
-    <!-- modal used for dynamic data processing messages and interactions -->
+        <!-- modal used for dynamic data processing messages and interactions -->
         <div class="modal fade" id="rec-review-modal">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -30,6 +38,6 @@
         newWindow.focus();
         }
         }
-
+        
     </script>
 </div>
