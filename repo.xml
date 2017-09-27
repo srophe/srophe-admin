@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <meta xmlns="http://exist-db.org/xquery/repo">
     <description>Syriaca.org: Administrative Pages</description>
     <author>Syriaca.org</author>
@@ -19,7 +18,7 @@
         <!-- Contact email -->
         <contact>info@syriaca.org</contact>
         <!-- Logo name and location relative to app root -->
-        <logo>/</logo>
+        <logo></logo>
         <!-- Web Site URL -->
         <url>http://syriaca.org/</url>
         <!-- Root of app for building dynamic links. Default is eXist app root -->

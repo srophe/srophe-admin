@@ -8,9 +8,10 @@
 .nav-tabs {border:none;}
 table.browse {width: 70%}
 table.browse td {padding-right:2em;}
-/*table.browse th.status {width:75px;}
-table.browse th.id {width:50px;}
-*/
+table.browse th.status {width:25%;}
+table.browse th.idno {width:25%;}
+table.browse th.Title {width:50%;}
+
 .label-success, .label-warning {border:2px solid #fff; display:block;margin-bottom:.2em; }
 .comments {display:block; padding:.5em; margin-top:1em; border-bottom: 1px dotted #eee;}
 .comments footer {display:block;text-align:left;}
