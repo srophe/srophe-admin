@@ -1,10 +1,8 @@
-
+#DS_Store 
 .DS_Store
 
 # Other files and folders
-*sosol.xql
-*sosol-submit.xql
-*oauth.xql
+*perseids.xml
 
 # Build and Release Folders
 *.xar
