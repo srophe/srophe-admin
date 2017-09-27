@@ -1,4 +1,5 @@
-#content {margin:0 2em; padding-top:2em; background-color:white; width:95%;}
+.banner-text {margin-left:1em; padding-top:.5em;}
+#content {margin:2em; padding-top:2em; background-color:white; width:95%;}
 .rec-review h3 {font-size:1.5em; color:gray;}
 .rec-review h1 {color:gray; border-bottom:3px solid gray; padding-left:1em;}
 
@@ -6,11 +7,14 @@
 .tab-content{padding: 0 2em;}
 .nav .indent{display:block; margin-left:1.5em; padding-bottom:1em;}
 .nav-tabs {border:none;}
-table.browse {width: 70%}
+table.browse {width: 90%;}
 table.browse td {padding-right:2em;}
-/*table.browse th.status {width:75px;}
-table.browse th.id {width:50px;}
+/*
+table.browse th.status {width:20%; margin-left:.5em;}
+table.browse th.idno {width:20%; margin-left:.5em;}
+table.browse th.title {width:60%; margin-left:.5em;}
 */
+
 .label-success, .label-warning {border:2px solid #fff; display:block;margin-bottom:.2em; }
 .comments {display:block; padding:.5em; margin-top:1em; border-bottom: 1px dotted #eee;}
 .comments footer {display:block;text-align:left;}

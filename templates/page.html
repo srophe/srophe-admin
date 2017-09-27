@@ -3,7 +3,7 @@
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <title data-template="config:app-title"></title>
+        <title data-template="config:app-title"/>
         <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/>
         <link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
         <meta name="DC.type" property="dc.type" content="Text"/>
@@ -19,7 +19,7 @@
     </head>
     <body>
         <!-- Fixed navbar -->
-        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation" data-template="app:fix-links">
             <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
@@ -28,27 +28,21 @@
                         <span class="icon-bar"/>
                         <span class="icon-bar"/>
                     </button>
-                    <a class="navbar-brand" href="index.html">
+                    <a class="navbar-brand" href="$app-root/index.html">
                         <!--<span class="banner-logo" data-template="app:app-logo"></span>-->
-                        <span class="banner-text" data-template="app:app-title"></span>
+                        <span class="banner-text" data-template="app:app-title"/>
                     </a>
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li>
-                            <a href="index.html">Administrative Pages</a>
+                            <a href="$app-root/browse.html">Browse Records</a>
                         </li>
                         <li>
-                            <a href="upload.html">Upload New Records</a>
+                            <a href="$app-root/upload.html">Upload New Records</a>
                         </li>
                         <li>
-                            <a href="browse.html">Records</a>
-                        </li>
-                        <li>
-                            <a href="browse-comments.html">Comments</a>
-                        </li>
-                        <li>
-                            <a href="forms/form.xq?form=srophe/initialize.xhtml">TEI Forms</a>
+                            <a href="$app-root/forms/form.xq?form=srophe/initialize.xhtml">TEI Forms</a>
                         </li>
                     </ul>
                     <ul class="nav navbar-nav pull-right">

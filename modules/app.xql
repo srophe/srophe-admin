@@ -34,6 +34,17 @@ declare function app:get-rec($node as node(), $model as map(*)){
     map {"data" := collection($global:data-root)//tei:idno[@type='URI'][. = $app:id]/ancestor::tei:TEI}
 };
 
+(:~      
+ : Traverse main nav and "fix" links based on values in config.xml
+ : Replaces $app-root with vaule defined in config.xml. 
+ : This allows for more flexible deployment for dev and production environments.   
+:)
+declare
+    %templates:wrap
+function app:fix-links($node as node(), $model as map(*)) {
+    templates:process(global:fix-links($node/node()), $model)
+};
+
 (:~
  : Check current user, show username if loged in, otherwise 'Guest'
 :)
@@ -67,6 +78,9 @@ return
     else ()
 };
 
+(:~
+ : For browsing data by collection, used by Syriaca.org
+:)
 declare function app:get-collections-list($node as node(), $model as map(*)){
 for $collection-title in distinct-values(collection($global:data-root)//tei:title[@level=('m','s')][parent::tei:titleStmt][not(ancestor::tei:TEI/descendant::tei:body/tei:biblStruct)])
 order by $collection-title
@@ -123,6 +137,9 @@ return
 else ()
 };
 
+(:
+ : Get browse results
+:)
 declare function app:get-browse($node as node(), $model as map(*)){
 let $recs :=
     if($app:collection-title != '') then
@@ -134,6 +151,19 @@ return
     map {"browse-recs" := $recs}
 };
 
+
+(:
+ : Get All browse results
+:)
+declare function app:get-all-browse($node as node(), $model as map(*)){
+let $recs := collection($global:data-root)//tei:title[parent::tei:titleStmt]
+return
+    map {"browse-recs" := $recs}
+};
+
+(:
+ : @depreciated, use Persieds for comments
+:)
 declare function app:get-comments-browse($node as node(), $model as map(*)){
 let $recs :=
         if($app:collection-title = 'person') then
@@ -152,53 +182,55 @@ return
  : $app:collection-title restrict by collection title in tei:titleStmt/tei:title[@level='m' or 's']
 :)
 declare function app:browse($node as node(), $model as map(*)){
-if($app:collection-title != '') then
-let $browse-count := count($model("browse-recs"))
-return
-<div class="section">
-    <h2>{$app:collection-title} ({$browse-count})</h2>
-    <table class="browse">
-        <thead>
-            <tr>
-                <th class="status">Status</th>
-                <th class="idno">ID</th>
-                <th class="Title">Title
-                <ul class="pagination nav nav-tabs pull-right">
-                    {app:paging($browse-count)}
-                        <li>
-                         <div class="btn-group">
-                             <div class="dropdown"><button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">View <span class="caret"/></button>
-                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                     <li role="presentation"><a role="menuitem" tabindex="-1" href="browse.html?collection-title={$app:collection-title}" id="published">All</a></li>
-                                     <li role="presentation"><a role="menuitem" tabindex="-1" href="browse.html?collection-title={$app:collection-title}&amp;view=published" id="published">Published</a></li>
-                                     <li role="presentation"><a role="menuitem" tabindex="-1" href="browse.html?collection-title={$app:collection-title}&amp;view=draft" id="draft">Draft</a></li>
-                                     <li role="presentation"><a role="menuitem" tabindex="-1" href="browse.html?collection-title={$app:collection-title}&amp;view=deprecated" id="deprecated">Deprecated</a></li>
-                                     <li role="presentation"><a role="menuitem" tabindex="-1" href="browse.html?collection-title={$app:collection-title}&amp;view=incomplete" id="incomplete">Incomplete</a></li>
-                                     <li role="presentation"><a role="menuitem" tabindex="-1" href="browse.html?collection-title={$app:collection-title}&amp;view=underReview" id="underReview">Under Review</a></li>
-                                 </ul>
-                             </div>
-                         </div>
-                        </li>
-                        <li>
-                         <div class="btn-group">
-                             <div class="dropdown"><button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">Sort <span class="caret"/></button>
-                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                     <li role="presentation"><a role="menuitem" tabindex="-1" href="browse.html?collection-title={$app:collection-title}&amp;sort=alpha" id="alpha">Alphabetical (Title)</a></li>
-                                     <li role="presentation"><a role="menuitem" tabindex="-1" href="browse.html?collection-title={$app:collection-title}&amp;sort=num" id="num">ID No</a></li>
-                                 </ul>
-                             </div>
-                         </div>
-                        </li>
-                </ul>
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            {app:browse-list($node, $model)}
-        </tbody>
-    </table>
-</div>
-else ()
+    let $browse-count := count($model("browse-recs"))
+    let $collection := if($app:collection-title !='') then concat('&amp;collection-title=',$app:collection-title) else ()
+    return
+    if($browse-count != 0) then 
+    <div class="section">
+        <h2>{if($app:collection-title !='') then $app:collection-title else 'Records: '} ({$browse-count})</h2>
+        <table class="browse">
+            <thead>
+                <tr>
+                    <th class="status">Status</th>
+                    <th class="idno">ID</th>
+                    <th class="title">
+                        <span>Title</span>
+                        <ul class="pagination">
+                            {app:paging($browse-count)}
+                                <li>
+                                 <div class="btn-group">
+                                     <div class="dropdown"><button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">View <span class="caret"/></button>
+                                         <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                             <li role="presentation"><a role="menuitem" tabindex="-1" href="?start=1{$collection}" id="published">All</a></li>
+                                             <li role="presentation"><a role="menuitem" tabindex="-1" href="?view=published{$collection}" id="published">Published</a></li>
+                                             <li role="presentation"><a role="menuitem" tabindex="-1" href="?view=draft{$collection}" id="draft">Draft</a></li>
+                                             <li role="presentation"><a role="menuitem" tabindex="-1" href="?view=deprecated{$collection}" id="deprecated">Deprecated</a></li>
+                                             <li role="presentation"><a role="menuitem" tabindex="-1" href="?view=incomplete{$collection}" id="incomplete">Incomplete</a></li>
+                                             <li role="presentation"><a role="menuitem" tabindex="-1" href="?view=underReview{$collection}" id="underReview">Under Review</a></li>
+                                         </ul>
+                                     </div>
+                                 </div>
+                                </li>
+                                <li>
+                                 <div class="btn-group">
+                                     <div class="dropdown"><button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">Sort <span class="caret"/></button>
+                                         <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                             <li role="presentation"><a role="menuitem" tabindex="-1" href="?sort=alpha{$collection}" id="alpha">Alphabetical (Title)</a></li>
+                                             <li role="presentation"><a role="menuitem" tabindex="-1" href="?sort=num{$collection}" id="num">ID No</a></li>
+                                         </ul>
+                                     </div>
+                                 </div>
+                                </li>
+                        </ul>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {app:browse-list($node, $model)}
+            </tbody>
+        </table>
+    </div>
+    else ()
 };
 
 (:~

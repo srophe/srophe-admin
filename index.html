@@ -5,6 +5,13 @@
                 <h1>Administrative functions</h1>
                 <p>Edit and review records.</p>
                 <ul class="nav nav-pills nav-stacked">
+                    <li class="well" >
+                        <form action="review-rec.html">
+                           <strong>Get Record by ID:</strong>
+                            <input type="text" id="id" name="id"/>
+                            <button type="submit" class="btn btn-info">Go</button>
+                        </form>
+                    </li>
                     <li>
                         <a href="browse.html">
                             <i class="glyphicon glyphicon-file"/> Browse Records</a>
@@ -13,6 +20,11 @@
                         <a href="browse-comments.html">
                             <i class="glyphicon glyphicon-comment"/> Browse Comments </a>
                     </li>
+                    <li>
+                        <a href="upload.html">
+                            <i class="glyphicon glyphicon-upload"/>Upload Record</a>
+                    </li>
+                    <!--
                     <li>
                         <a href="#">
                             <i class="glyphicon glyphicon-edit"/>Actions</a>
@@ -27,10 +39,14 @@
                             </li>
                         </ul>
                     </li>
+                    -->
                 </ul>
             </div>
             <div class="tab-content col-md-7">
-                <div data-template="app:index-dashboard" data-template-collection-title="" data-template-collection-icon="globe" data-template-style="primary"/>
+                <!--<div data-template="app:index-dashboard" data-template-collection-title="" data-template-collection-icon="globe" data-template-style="primary"/>-->
+                <div data-template="app:get-all-browse">
+                    <div data-template="app:browse"/>
+                </div>
                 <!--
                 <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="dashboardOne">
                     <div class="panel-body dashboard">
