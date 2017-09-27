@@ -264,112 +264,42 @@ return
         </tr>
 };
 
-(:
- : @depreciated, comments should be made through Persieds
+(:~
+ : Format record status 
 :)
-(:
-declare function app:browse-comments($node as node(), $model as map(*)){
-let $browse-count := count($model("browse-comments"))
-return
-<div class="section">
-    <h2>Browse {$app:collection-title} comments ({$browse-count})</h2>
-    <table class="browse">
-        <thead>
-            <tr>
-                <th class="status">Status</th>
-                <th class="idno">ID</th>
-                <th class="Title">Title</th>
-            </tr>
-        </thead>
-        <tbody>
-        {
-             for $rec in $model("browse-comments")
-             let $title := $rec/atom:feed/atom:title[1]/node()
-             let $id := substring-after($rec/atom:feed/atom:id,'comments:')
-             let $num := tokenize($id,'/')[last()]
-             let $file-path := concat(replace(replace($id,'http://syriaca.org/','/db/apps/srophe-forms/data/comments/'),'/tei',''),'.xml')
-             let $status := doc($file-path)//atom:entry/atom:summary[starts-with(.,'approved : ')]
-             let $status := if($status != '') then 'Approved' else 'Pending'
-             let $sort := if($app:sort = 'num') then xs:integer($num) else $title[1]
-             order by $sort ascending
-             return
-                 <tr class="status {$status}">
-                     <td>{if($status = 'Approved') then
-                         <span class="label label-success">Approved</span>
-                     else
-                         <span class="label label-warning">Pending</span>}
-                     </td>
-                     <td>{string($num)}</td>
-                     <td><a href="comments.html?id={$id}">{$title}</a></td>
-                 </tr>
-            }
-        </tbody>
-    </table>
-</div>
-};
-:)
-
 declare function app:rec-status($node as node(), $model as map(*)){
     if($app:id != '') then
-        string($model("data")/descendant::tei:revisionDesc/@status)
+        if(string($model("data")/descendant::tei:revisionDesc/@status) != '') then 
+            (<h3>Record Status </h3>,
+            <span class="alert alert-{if($model("data")/descendant::tei:revisionDesc/@status = 'published') then 'success' else 'danger'}">{string($model("data")/descendant::tei:revisionDesc/@status)}</span>)
+        else ()
     else ()
 };
 
 (:~
-    Dashboard of record administrative functions
-    View record on dev
-    Comment
-    View change log
-    Run NER
-    Run Name scripts, other?
-    Should add record title and number to top of page
-    add status after title, with toggle for approve/publish
+ : Link to submit record to Perseids 
 :)
-declare function app:rec-dashboard($node as node(), $model as map(*)){
-(
-<div class="col-md-2 top-padding">
-<h3>Record Status </h3>
-<!-- Should add option here for changing status? -->
-<span class="alert alert-{if(app:rec-status($node,$model) = 'published') then 'success' else 'danger'}">{app:rec-status($node,$model)}</span>
-<ul class="nav nav-pills nav-stacked top-padding">
-  <li class="active"><a href="#tab_rec" data-toggle="pill"> <i class="glyphicon glyphicon-file"></i> Review Record</a></li>
-  <li><a href="#tab_tei" data-toggle="pill"> <i class="glyphicon glyphicon-file"></i> View TEI</a></li>
-  <li><a href="#tab_change" data-toggle="pill"><i class="glyphicon glyphicon-stats"></i> Review Changes</a></li>
-  <li><a href="#tab_comments" data-toggle="pill"><i class="glyphicon glyphicon-comment"></i> Comments </a></li>
-  <li><a href="#tab_actions" data-toggle="pill"><i class="glyphicon glyphicon-edit"></i> Actions</a>
-  <li><a href="#tab_ner" data-toggle="pill" class="indent ner" data-url="{$global:app-root}/modules/services/ner.xql?id={$app:id}" data-param-run="no"> NER </a></li>
-  <li><span class="indent"> Name normalization</span></li>
-       <!-- <ul>
-            <li>
-            <a href="tab_ner" data-toggle="pill" data-url="/exist/apps/srophe-forms/services/run-test.xql?id={$app:id}" id="ner">Run NER</a></li>
-            <li>Run name normalization</li>
-        </ul>
-        -->
-  </li>
-  <!--
-  <li><span class="indent"><a href="modules/services/sosol-submit.xql?id={$app:id}"> Submit to Perseids 1</a></span></li>
-  <li><span class="indent"><a href="modules/services/sosol.xql?id={$app:id}"> Submit to Perseids 2</a></span></li>
-  -->
-  <li><span class="indent"><a href="javascript:poptastic('modules/services/sosol-submit.xql?id={$app:id}')"> Submit to Perseids </a></span></li>
-  <li><span class="indent"> Publish [Forthcoming]</span></li>
-  <li><span class="indent"><a href="modules/download.xql?id={$app:id}"> Download TEI</a></span></li>
+declare function app:submit-perseids-link($node as node(), $model as map(*)){
+    if($app:id != '') then
+        <a href="javascript:poptastic('modules/services/sosol-submit.xql?id={$app:id}')"> Submit to Perseids </a>
+    else ()
+};
 
-</ul>
-  <span>
-  <br/>
-    {
-        let $id := tokenize($app:id,'/')[last()]
-        let $next := xs:integer($id) + 1
-        let $prev := xs:integer($id) - 1
-        let $next-uri := replace($app:id,$id,string($next))
-        let $prev-uri := replace($app:id,$id,string($prev))
-        return
-            (<a class="btn btn-default" href="?id={$prev-uri}"><span class="glyphicon glyphicon-backward" aria-hidden="true"/> Previous </a>,
-            <a class="btn btn-default" href="?id={$next-uri}"> Next <span class="glyphicon glyphicon-forward" aria-hidden="true"/> </a>)
-    }
-  </span>
-  </div>,
-<div class="tab-content col-md-10  top-padding">
+(:~
+ : Link to download TEI record 
+:)
+declare function app:download-link($node as node(), $model as map(*)){
+    if($app:id != '') then
+       <a href="modules/download.xql?id={$app:id}"> Download TEI</a>
+    else ()
+};
+
+(:~
+ : Main body of TEI record review pane, shows html,tei,change log and comments. 
+:)
+declare function app:record-view($node as node(), $model as map(*)){
+    if($app:id != '') then
+       <div class="tab-content col-md-10  top-padding">
         <div class="tab-pane active" id="tab_rec">
             {app:review-rec($node,$model)}
         </div>
@@ -401,8 +331,8 @@ declare function app:rec-dashboard($node as node(), $model as map(*)){
                 <i class="icon-upload icon-large"></i> Loading Data</span>
             </div>
         </div>
- </div>)
-
+        </div>
+    else ()
 };
 
 (:
@@ -465,7 +395,6 @@ declare %templates:wrap function app:get-comments-form($node as node(), $model a
     </div>
 </form>
 };
-
 
 (:~
  : All TEI record changes used by review-rec.html
