@@ -46,7 +46,7 @@ declare variable $global:nav-base :=
 
 (: Base URI used in tei:idno :)
 declare variable $global:base-uri := $global:get-config//repo:base-uri/text();
-declare variable $global:public-view-base := concat('/db/apps/',$global:get-config//repo:public-view/text());
+declare variable $global:public-view-base := concat('/exist/apps/',$global:get-config//repo:public-view/text());
 
 declare variable $global:app-title := $global:get-config//repo:title/text();
 
