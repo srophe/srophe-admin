@@ -9,7 +9,15 @@ declare variable $exist:path external;
 declare variable $exist:resource external;
 declare variable $exist:controller external;
 declare variable $exist:prefix external;
-
+(: Used to test vars 
+<div>
+    <p>$exist:path: {$exist:path}</p>
+    <p>$exist:resource: {$exist:resource}</p>
+    <p>$exist:controller: {$exist:controller}</p>
+    <p>$exist:prefix: {$exist:prefix}</p>
+    <p>$global:public-view-base: {$global:public-view-base}</p>
+</div>
+:)
 
 declare variable $logout := request:get-parameter("logout", ());
 declare variable $login := request:get-parameter("user", ());
@@ -18,7 +26,6 @@ if ($exist:path eq "") then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <redirect url="{concat(request:get-uri(), '/')}"/>
     </dispatch>
-
 else if ($exist:path eq "/") then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <redirect url="index.html"/>
@@ -57,9 +64,9 @@ else if (ends-with($exist:resource, ".xql")) then (
         </error-handler>
     </dispatch>
 )
-else if (contains($exist:path, "/$main-module/")) then
+else if (contains($exist:path, "/$main-module/")) then 
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <forward url="/{substring-after($global:public-view-base,'/exist/apps/')}/{substring-after($exist:path, '/$main-module/')}">
+        <forward url="{concat(replace($global:public-view-base,'/db/apps',''),'/',substring-after($exist:path, '/$main-module/'))}">
             <set-header name="Cache-Control" value="max-age=3600, must-revalidate"/>
         </forward>
     </dispatch>
