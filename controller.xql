@@ -66,7 +66,7 @@ else if (ends-with($exist:resource, ".xql")) then (
 )
 else if (contains($exist:path, "/$main-module/")) then 
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <forward url="{concat(replace($global:public-view-base,'/db/apps',''),'/',substring-after($exist:path, '/$main-module/'))}">
+        <forward url="{concat(replace($global:public-view-base,'/exist/apps',''),'/',substring-after($exist:path, '/$main-module/'))}">
             <set-header name="Cache-Control" value="max-age=3600, must-revalidate"/>
         </forward>
     </dispatch>
