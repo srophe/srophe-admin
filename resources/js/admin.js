@@ -121,4 +121,14 @@ $(document).ready(function() {
     $('#rec-review-modal').on('hidden.bs.modal', function () {
         location.reload();
     })
+    
+    //Upload record
+    $('form#upload').on("submit", function(event) {
+        var URL = $(this).attr('action');
+        event.preventDefault();
+        $.get(URL,function(data){
+           $('#response').modal('show');
+           $('#response-content').html(data);
+        });
+    });
 });

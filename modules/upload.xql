@@ -32,7 +32,6 @@ return
         try {(
             <p style="display:none;">{(xmldb:store($collection-path, xmldb:encode-uri($name), $file))}</p>,
             <h4>Upload complete!</h4>,
-            <p>Sub mod name: {$uri-mod-name}</p>,
             <p class="indent">File <strong>{$name}</strong> has been saved to:<strong>{substring-after($collection-path,$global:data-root)}</strong>.</p>,
             <p class="indent alert alert-info">Review record: <a href="{concat('../review-rec.html?id=',$uri)}">{$uri}</a></p>
             )}

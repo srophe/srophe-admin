@@ -4,8 +4,12 @@
         <div class="row top-padding">
             <div class="col-md-3">
                 <ul class="nav nav-pills nav-stacked">
-                    <li><a href="browse.html">View all in process records</a></li>
-                    <li><a href="forms/place-form.xql">Add new place data using our online form*</a></li>
+                    <li>
+                        <a href="browse.html">View all in process records</a>
+                    </li>
+                    <li>
+                        <a href="forms/place-form.xql">Add new place data using our online form*</a>
+                    </li>
                 </ul>
                 <p class="alert alert-info">* An in process feature for generating new tei records online</p>
             </div>
@@ -29,11 +33,25 @@
                     </form>
                     <br/>
                     <p class="alert alert-info">
-                        <small>* TEI document must be well formed. Please follow Syriaca.org guidelines [link to guidelines?] for drafting place record. <br/>
-                        </small>
+                        <small>* TEI document must be well formed. Please follow Syriaca.org <a href="http://syriaca.org/documentation/tei-mss-tutorials.html">guidelines</a> for drafting place record. <br/></small>
                     </p>
                 </blockquote>
-                <div id="response"/>
+            </div>
+        </div>
+    </div>
+    <div id="response" class="modal fade" tabindex="-1" style="display: none;">
+        <div class="modal-dialog" style="z-index: 1080;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                    <div id="response-content"/>  
+                </div>
+                <div class="modal-footer">  
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
             </div>
         </div>
     </div>
