@@ -9,6 +9,7 @@
     <target>logar-admin</target>
     <prepare>pre-install.xql</prepare>
     <finish>post-install.xql</finish>
+    <permissions user="logar-admin" group="logar" mode="rwxrwxr-x"/>
     <config>
         <!-- App title -->
         <title>Logar: Administrative Pages</title>
@@ -33,7 +34,5 @@
         <!-- Base URI for identifiers in app data -->
         <base-uri>http://logarandes.org</base-uri>
     </config>
-    <permissions user="logar-admin" group="logar" mode="rwxrwxr-x"/>
-    
-<deployed>2017-09-26T10:13:29.189-04:00</deployed>
+    <deployed>2017-09-26T10:13:29.189-04:00</deployed>
 </meta>
