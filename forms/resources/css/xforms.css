@@ -48,14 +48,12 @@ fieldset > * {
     %width: auto !important; /* for IE7 */
     margin-left: 1.5em; /* emulating fieldset padding-left */
     margin-left: 1.5em !important; } /* for IE7 */
-/*
-fieldset *:first-child + * {
-    margin-top: 1em; }
-  */
-    /* emulating fieldset padding-top */
+
 fieldset .panel {margin-top:3.5em;}
+
 fieldset:last-child {
     margin-bottom: 1.5em; } /* emulating fieldset pading-bottom */
+
 legend {
     width: 100%;
     %width: 100% !important; /* for IE7 */
@@ -66,7 +64,6 @@ legend {
     text-indent: 1.5em; /* emulating padding-left */
     %left: -8px; } /* for IE7 */
 
-
 /* user format */
 fieldset, legend {
     border: 1px solid #ddd;
@@ -76,11 +73,13 @@ fieldset, legend {
     -moz-border-radius-topright: 5px;
     border-top-right-radius: 5px;
     }
+
 legend {
     font-weight: normal;
     font-style: italic;
     font-size: 1.2em;
     text-shadow: #fff 1px 1px 1px; }
+
 fieldset {
     background-color: white;
     -moz-border-radius-bottomleft: 5px;
@@ -106,23 +105,39 @@ fieldset {
 .horiz-tab-menu .edit{
     background-color:#ccc;
 }
+/*
 .horiz-tab-menu .edit:before{
     font-family:"Glyphicons Halflings";
     content:"\270f";
     padding-right:1em;
     background-color:#ccc;
-    /*color:white;*/
+}
+*/
+.edit:before{
+    font-family:"Glyphicons Halflings";
+    /*content:"\270f";*/
+    content:"\e065";
+    padding-right:1em;
 }
 .horiz-tab-menu .view{
     background-color:#eee;
 }
+/*
 .horiz-tab-menu .view:before{
     font-family:"Glyphicons Halflings";
     content:"\e105";
     padding-right:1em;
     background-color:#eee;
-    /*color:white;*/
 }
+*/
+
+.view:before{
+    font-family:"Glyphicons Halflings";
+    /*content:"\e105";*/
+    content:"\e067";
+    padding-right:1em;
+}
+
 /* View/Edit tab panel */
 .tab-panel {margin-bottom:1.5em;}
 .tab-panel .edit{
@@ -141,6 +156,24 @@ fieldset {
     padding-left:1em;
 }
 
+.element-row {
+    border:1px solid red;
+    margin-top:0;
+    padding-top:.5em;
+    padding-left:.5em;
+}
+
+.element-row .edit{
+    margin-top:0;
+    padding-top:1em;
+    padding-left:1em;
+}
+
+.element-row .view{
+    margin-top:0;
+    padding-top:1em;
+    padding-left:1em;
+}
 .modal-dialog{
 /* new custom width */
     width: 950px;
@@ -171,9 +204,24 @@ fieldset {
     margin-left:-.5em;
     color:grey;
 }
+
+.accordion h4[aria-expanded="false"] span.glyphicon-chevron-down,
+.accordion h4[aria-expanded="true"] span.glyphicon-chevron-right
+{
+    display: none;
+}
+
+.accordion h4[aria-expanded="true"] span.glyphicon-chevron-down,
+.accordion h4[aria-expanded="false"] span.glyphicon-chevron-right
+{
+    display: inline;
+}
+
 /* XSLT Forms styles */
 /*#xsltforms_debug {display:none;}*/
-.xforms-label {display:inline; padding-right:.5em; padding-left:1em; font-weight:400;}
+.xforms-label {display:inline; padding-right:.5em; padding-left:1em; font-weight:600;}
+.xforms-label:after {content:": ";}
+
 .xforms-select option{width: 40em;}
 
 .xforms-dialog {

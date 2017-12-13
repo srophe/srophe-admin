@@ -84,58 +84,62 @@ declare function local:recurse($node as item()) as item()* {
         local:dispatch($node)
 };
 
-let $data := request:get-parameter('postdata','')
-let $results := fn:parse-xml($data)
-let $id := replace($results/descendant::tei:idno[1],'/tei','')      
+let $results := request:get-data()
+let $id := if($results/descendant::tei:idno[1] != '') then replace($results/descendant::tei:idno[1],'/tei','') else 'http://logarandes.org/place/10'      
 let $file-name := if($id != '') then concat(tokenize($id,'/')[last()], '.xml') else 'form.xml'
 let $post-processed-xml := local:dispatch($results)
 (:<TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="en">{$post-processed-xml/child::*}</TEI> :)
 return 
-      if(request:get-parameter('type', '') = 'view') then
+    if(request:get-parameter('type', '') = 'view') then
         (response:set-header("Content-type", 'text/xml'),
         serialize($post-processed-xml, 
         <output:serialization-parameters>
             <output:method>xml</output:method>
             <output:media-type>text/xml</output:media-type>
         </output:serialization-parameters>))
+    else if(request:get-parameter('type', '') = 'get-rec') then
+       root(collection($global:data-root)//tei:idno[. = $id])
+    else if(request:get-parameter('type', '') = 'save') then
+        <response code="400">
+            <message>Please download the record and save to Syriaca.org's github repository.</message>
+        </response>          
     else if(request:get-parameter('type', '') = 'download') then
        (response:set-header("Content-Disposition", fn:concat("attachment; filename=", $file-name)),$post-processed-xml)
     else if(request:get-parameter('type', '') = 'save') then
         <response code="400">
             <message>Please download the record and save to Syriaca.org's github repository.</message>
-        </response> 
-        (:
-        let $data-root := $global:data-root
-        let $collection :=
-            if(contains($id,'/place/')) then concat($data-root,'/places/tei')
-            else if(contains($id,'/person')) then concat($data-root,'/persons/tei')
-            else if(contains($id,'/bibl')) then concat($data-root,'/bibl/tei')
-            else if(contains($id,'/manuscript')) then concat($data-root,'/manuscripts/tei')
-            else if(contains($id,'/work')) then concat($data-root,'/works/tei')
-            else ()
-        let $path-name := 
-            if(contains($id, '/place')) then concat($data-root, '/places/tei/', $file-name)
-            else if(contains($id, '/person')) then concat($data-root, '/persons/tei/', $file-name)
-            else if(contains($id, '/bibl')) then concat($data-root, '/bibl/tei/', $file-name)
-            else if(contains($id,'/manuscript')) then concat($data-root, '/manuscripts/tei/', $file-name)
-            else if(contains($id,'/work')) then concat($data-root, '/works/tei/', $file-name)
-            else ()
-        return             
-            if($collection != '' and $path-name != '') then
-                try {
-                    <data code="200">
-                        <message>New record saved: {xmldb:store($collection, $file-name, $post-processed-xml)}</message>
-                    </data>
-                } catch * {
-                    <data code="500">
-                        <message>Error saving data</message>
-                    </data>            
-                }       
-            else 
-                <data code="500">
-                   <message>Error building path id={$id} Path: {$path-name} Collection: {$collection}</message>
-                </data> 
-    :)                
+        </response>         
+    else if(request:get-parameter('type', '') = 'merge') then
+        if($id != '') then
+            let $record := root(collection($global:data-root)//tei:idno[. = $id])
+            return 
+                if($record) then 
+                    let $change := 
+                        <change xmlns="http://www.tei-c.org/ns/1.0" who="http://syriaca.org/documentation/editors.xml#onlineForms" when="{current-date()}">
+                            {string-join($results/descendant::tei:change/descendant::*,', ')}    
+                        </change>
+                    return
+                        try{(
+                            update insert $change preceding $record/descendant::tei:revisionDesc/tei:change,
+                            let $container := if(name($results/descendant::tei:text/child::*)) then name($results/descendant::tei:text/child::*) else 'place'
+                            let $path := concat('$post-processed-xml/descendant::tei:',$container, '/child::*')
+                            let $path := '$results/descendant::tei:place'
+                            for $update in util:eval($path)/child::*[not(self::tei:idno)]
+                            let $element := local-name($update)
+                            return 
+                                update insert $update following util:eval(concat('$record/descendant::tei:',$container,'/tei:',$element)),                               
+                                 <response xmlns="http://www.w3.org/1999/xhtml" status="success">
+                                     <message>Record updated 7</message>
+                                 </response>    
+                            )}
+                        catch * {
+                            <response xmlns="http://www.w3.org/1999/xhtml" status="success">
+                                <message>Error updating record {concat($err:code, ": ", $err:description)}</message>
+                            </response>
+                        }
+                else 
+                    <response xmlns="http://www.w3.org/1999/xhtml" status="success"><message>Merge record, can't find record: {$id}</message></response>
+        else <response xmlns="http://www.w3.org/1999/xhtml" status="success"><message>New record: {$global:data-root} {$id}</message></response>
     else 
         <response code="500">
             <message>General Error</message>

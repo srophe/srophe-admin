@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="en">
     <teiHeader>
         <fileDesc>
@@ -57,12 +56,14 @@
             <listPlace>
                 <place xml:id="place-XXX" type="">
                     <!--Must include 1 english name place type -->
-                    <placeName xml:id="nameXXX-X" xml:lang="" source="" syriaca-tags="#syriaca-headword"/>
+                    <placeName xml:id="nameXXX-X" source=""/>
                     <!-- additional descriptions -->
+                    <desc/>
                     <desc xml:lang="">
                         <quote source=""/>
                     </desc>
-                    <note type=""/>
+                    <note/>
+                    <note type="" xml:lang=""/>
                     <location type="">
                         <!--<desc/>-->
                         <!--
@@ -107,11 +108,8 @@
                     <idno type="URI"/>
                     <!-- add links suggestions?-->
                     <!-- bibl also save to bible data folder? -->
-                    <bibl xml:id="bib78-1">
-                        <author/>
-                        <title level="a" xml:lang="en"/>
-                        <citedRange unit="pp"/>
-                    </bibl>
+                    <bibl xml:id="biblx-x"/>
+                    <bibl xml:id="bib78-1"><author/><title level="a" xml:lang="en"/><citedRange unit="pp"/></bibl>
                 </place>
                 <!-- relations?
                 <relation name="contained" active="http://syriaca.org/place/145 http://syriaca.org/place/166" passive="#place-78" source="#bib78-1" to="0363"/>

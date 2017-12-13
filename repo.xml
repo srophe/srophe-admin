@@ -1,5 +1,5 @@
 <meta xmlns="http://exist-db.org/xquery/repo">
-    <description>Syriaca.org: Administrative Pages</description>
+    <description>Syriaca.org: The Syriac Reference Portal Administrative Pages</description>
     <author>Syriaca.org</author>
     <website>http://syriaca.org/</website>
     <status>beta</status>
@@ -9,6 +9,7 @@
     <target>srophe-admin</target>
     <prepare>pre-install.xql</prepare>
     <finish>post-install.xql</finish>
+    <permissions user="srophe" group="srophe" mode="rwxrwxr-x"/>
     <config>
         <!-- App title -->
         <title>Syriaca.org: Administrative Pages</title>
@@ -17,14 +18,14 @@
             culture, history, and literature of Syriac communities from antiquity to the present.</description>
         <!-- Contact email -->
         <contact>info@syriaca.org</contact>
-        <!-- Logo name and location relative to app root -->
-        <logo/>
+        <!-- Logo name (assumes path to logo is $app-root/resources/img/) -->
+        <logo>syriaca-logo.png</logo>
         <!-- Web Site URL -->
         <url>http://syriaca.org/</url>
         <!-- Root of app for building dynamic links. Default is eXist app root -->
         <nav-base>/exist/apps/srophe-admin</nav-base>
         <!-- Root for public view of records, allows code sharing accross admin and base app -->
-        <public-view>srophe</public-view>
+        <public-view>/exist/apps/srophe</public-view>
         <!-- eXist app root for app deployment-->
         <app-root>srophe-admin</app-root>
         <!-- eXist data app root for gazetteer data -->
@@ -32,8 +33,11 @@
         <comments-root>srophe-comments</comments-root>
         <!-- Base URI for identifiers in app data -->
         <base-uri>http://syriaca.org</base-uri>
+        <!-- Map rendering -->
+        <maps>
+            <option>google</option>
+            <option selected="true">leaflet</option>
+        </maps>
     </config>
-    <permissions user="srophe-admin" group="srophe" mode="rwxrwxr-x"/>
-    
-<deployed>2017-09-27T13:02:17.489-04:00</deployed>
+    <deployed>2017-09-26T10:13:29.189-04:00</deployed>
 </meta>

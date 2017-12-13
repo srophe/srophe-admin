@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<perseids-config>
+    <!-- Used by sosol.pp.xql-->
+    <api-key>5d51aff870b383c7e6b16e0bc073ade5</api-key>
+    <oauth_config>
+        <provider name="sosl">
+            <id>91c26f91dcffa95a3a25d9a2d82338a61d20dc35f8204c599b46ea456496f4a2</id>
+            <secret>4047092e79746778e084bf3755b4a22302b71d095e776a52e83af8aa268ca168</secret>
+            <access_token_url>https://sosol.perseids.org/sosol/oauth/token</access_token_url>
+            <authorize_url>https://sosol.perseids.org/sosol/oauth/authorize</authorize_url>
+            <redirect_url>http://wwwb.library.vanderbilt.edu/exist/apps/srophe-admin/oauth</redirect_url>
+        </provider>
+    </oauth_config>
+    <perseids-board record-type="person" xmlitem-type="SyriacaPerson" community-name="SBD Syriac Biographical Dictionary"/>
+    <perseids-board record-type="work" xmlitem-type="SyriacaWork" community-name="NHSL New Handbook of Syriac Literature"/>
+    <perseids-board record-type="place" xmlitem-type="Syriaca" community-name="TSG The Syriac Gazetteer"/>
+</perseids-config>
