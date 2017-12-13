@@ -16,3 +16,4 @@ declare variable $target external;
 
 (: Set UID so anyone can submit comments :)
 sm:chmod(xs:anyURI($target || "/modules/submit-comments.xql"), "rwsrwxr-x")
+sm:chmod(xs:anyURI($target || "/forms/services/submit.xql"), "rwsrwxr-x")

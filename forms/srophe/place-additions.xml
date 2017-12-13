@@ -1,12 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xf="http://www.w3.org/2002/xforms">
     <head>
         <title>Syriaca.org Place Editor</title>
         <meta name="author" content="wsalesky at gmail.com"/>
-        <meta name="description" content="Search Controlled Vocabularies"/>
+        <meta name="description" content="Edit TEI Place records"/>
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"/>
-        <link rel="stylesheet" type="text/css" href="../resources/css/xforms.css"/>
+        <link rel="stylesheet" type="text/css" href="resources/css/xforms.css"/>
         <!-- Optional theme -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css"/>
         <!-- jquery -->
@@ -16,27 +15,22 @@
         <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"/>
         <script type="text/javascript">
             <![CDATA[
-            function getUrlParameter(name) {
+                function getUrlParameter(name) {
                      name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
                      var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
                      var results = regex.exec(location.search);
                      return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
                  };
-            $(document).ready(function () {
-                
-                var instanceElement = document.getElementById('i-rec-id');
-                console.log('ID: ' + getUrlParameter('id') + 'Current instance: ' + instanceElement);
-                 //to use: getUrlParameter('id');
-              });   
+                 //to use: getUrlParameter('id'); 
             ]]>
         </script>
         <xf:model id="m-place">
             <!-- Load TEI record -->
             <xf:instance xmlns="http://www.tei-c.org/ns/1.0" id="i-rec" src="xml-templates/place-online-submissions.xml"/>
+            
             <!-- Template used for building optional elements. May be a better way to handle that  -->
             <xf:instance xmlns="http://www.tei-c.org/ns/1.0" id="i-template" src="xml-templates/template.xml"/>
-            <!-- Confessions for looking up confessions, perhaps should be a submodule? -->
-            <xf:instance xmlns="http://www.tei-c.org/ns/1.0" id="i-confessions" src="/exist/apps/srophe/documentation/confessions.xml"/>
+            <!-- For controlled values -->
             <xf:instance xmlns="http://www.tei-c.org/ns/1.0" id="i-ctr-vals" src="xml-templates/controlled-vals.xml"/>
             <!-- For inserting date attributes -->
             <xf:instance xmlns="http://www.tei-c.org/ns/1.0" id="i-dates">
@@ -44,7 +38,6 @@
                     <tei:date when="" from="" to="" notBefore="" notAfter=""/>
                 </tei>
             </xf:instance>
-            
             <!-- Location instance -->
             <xf:instance xmlns="http://www.tei-c.org/ns/1.0" id="i-location">
                 <tei:TEI>
@@ -60,12 +53,13 @@
                     </location>
                 </tei:TEI>
             </xf:instance>
-            
+            <!-- Sources -->
             <xf:instance xmlns="http://www.tei-c.org/ns/1.0" id="i-source">
                 <tei>
                     <tei:source source=""/>
                 </tei>
             </xf:instance>
+            
             <!-- For controlled vocab/bibl lookup  -->
             <xf:instance id="i-search">
                 <root xmlns="">
@@ -89,6 +83,7 @@
                     </TEI>
                 </results>
             </xf:instance>
+            
             <!-- For selecting and populating bibl elements -->
             <xf:instance xmlns="http://www.tei-c.org/ns/1.0" id="i-new-bibl">
                 <div>
@@ -111,9 +106,18 @@
             </xf:instance>
             
             <!-- Set URI for editing -->
-            <xf:instance xmlns="http://www.tei-c.org/ns/1.0" id="i-rec-id">
-                <uri></uri>
+            <xf:instance xmlns="http://www.tei-c.org/ns/1.0" id="i-user-details">
+                <teiHeader>
+                    <revisionDesc>
+                        <change who="online-submission">
+                            <name/>
+                            <email/>
+                            <comments/>
+                        </change>
+                    </revisionDesc>
+                </teiHeader>
             </xf:instance>
+            
             <!-- For error messages from server -->  
             <xf:instance id="i-submission">
                 <response status="success">
@@ -133,6 +137,7 @@
             <!-- Submissions -->
             <!-- Save and view -->
             <xf:submission id="s-download-xml" ref="instance('i-rec')" show="new" method="post" replace="all" action="form.xq?form=srophe/download.xml?type=download"/>
+            
             <!-- Save -->
             <xf:submission id="s-save" resource="services/submit.xql?type=save" ref="instance('i-rec')" replace="instance" instance="i-submission" method="post">
                 <xf:action ev:event="xforms-submit-done">
@@ -142,8 +147,9 @@
                     <xf:message ref="instance('i-submission')//*:message"/>
                 </xf:action>
             </xf:submission>
+            
             <!-- Submit and merge user submissions from webstie  -->
-            <xf:submission id="s-submit" resource="services/ubmit.xql?type=merge" ref="instance('i-rec')" replace="instance" instance="i-submission" method="post">
+            <xf:submission id="s-merge" resource="services/submit.xql?type=merge" ref="instance('i-rec')" replace="instance" instance="i-submission" method="post">
                 <xf:action ev:event="xforms-submit-done">
                     <xf:message ref="instance('i-submission')//*:message"/>
                 </xf:action>
@@ -152,137 +158,473 @@
                 </xf:action>
             </xf:submission>
             
+            <!-- Get record for editing -->
+            <xf:submission id="s-get-rec" method="get" ref="instance('i-rec')" replace="instance" instance="i-rec" serialization="none" mode="synchronous">
+                <xf:resource value="concat('services/get-rec.xql?id=',javascript:getUrlParameter('id'))"/>
+            </xf:submission>
+            
             <!-- Bind placeName to title -->
             <xf:bind ref="instance('i-rec')//tei:titleStmt/tei:title[1]" calculate="instance('i-rec')//tei:place/tei:placeName[@syriaca-tags ='#syriaca-headword'][1]"/>
             <xf:action ev:event="xforms-ready">
-                <xf:setvalue ref="instance('i-rec')//tei:idno[@type='URI'][1]" value="javascript:getUrlParameter('id')"/>
+                <!-- Load record if matching id eXists -->
+                <xf:send submission="s-get-rec"/>
             </xf:action>
         </xf:model>
     </head>
     <body>
         <div class="section">
+            <div class="accordion panel panel-info">
+                <div class="panel-heading">
+                    <h4 data-toggle="collapse" href="#collapseUserDetails" aria-expanded="false">
+                        <!--<span class="glyphicon glyphicon-chevron-right"></span>
+                                    <span class="glyphicon glyphicon-chevron-down"></span>-->
+                        User Details
+                    </h4>
+                </div>
+                <div id="collapseUserDetails" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <xf:output ref="tei:idno">
+                            <xf:label>ID (For testing): </xf:label>
+                        </xf:output>
+                        <xf:input ref="instance('i-user-details')//tei:revisionDesc/tei:change/tei:name">
+                            <xf:label>Your Name: </xf:label>
+                        </xf:input>
+                        <xf:input ref="instance('i-user-details')//tei:revisionDesc/tei:change/tei:email">
+                            <xf:label>Your email: </xf:label>
+                        </xf:input>
+                        <xf:textarea ref="instance('i-user-details')//tei:revisionDesc/tei:change/tei:comments">
+                            <xf:label>Comments about suggested change/addition: </xf:label>
+                        </xf:textarea>
+                    </div>
+                </div>
+            </div>
                 <xf:group ref="instance('i-rec')//tei:place" id="person">
-                    <xf:output ref="tei:idno">
-                        <xf:label>ID (For testing): </xf:label>
-                    </xf:output>
                     <div class="row tabbable">
                         <ul class="nav nav-pills nav-stacked col-md-2 col-sm-3">
                             <li><a href="#names" data-toggle="tab" class="active">Names</a></li>
-                            <li><a href="#desc" data-toggle="tab">Description</a></li>
-                            <li><a href="#details" data-toggle="tab">Details</a></li>   
+                            <li><a href="#desc" data-toggle="tab">Descriptions</a></li>
+                            <li><a href="#details" data-toggle="tab">Locations</a></li>   
                             <li><a href="#sources" data-toggle="tab">Sources</a></li>
                         </ul>
                         <div class="tab-content col-md-10 col-sm-9">
                             <div class="tab-pane active" id="names">
-                                <h3>Add Names</h3>
+                                <h3>Names</h3>
                                 <xf:repeat ref="tei:placeName" id="new-place-name">
                                     <fieldset>
-                                        <legend> Place <xf:trigger appearance="minimal" class="btn remove pull-right"><xf:label/><xf:delete ev:event="DOMActivate" ref="."/></xf:trigger>
-                                        </legend>
-                                        <div class="panel">
-                                            <xf:input ref=".">
-                                                <xf:label>Name</xf:label>
-                                            </xf:input>
-                                            <span>
-                                                <xf:select1 ref="@source" class="input-small">
-                                                    <xf:label>Source:</xf:label>
-                                                    <xf:itemset ref="instance('i-rec')//tei:text//tei:bibl">
-                                                        <!-- LOGAR specific change -->
-                                                        <!--<xf:label ref="tei:title"/>-->
-                                                        <xf:label ref="."/>
-                                                        <xf:value ref="@xml:id"/>
-                                                    </xf:itemset>
-                                                </xf:select1>&#160;
-                                                <!-- Add new source attribute if no source attribute -->
-                                                <xf:trigger class="btn btn-default add" appearance="minimal"
-                                                    ref="self::*[not(@source)]">
-                                                    <xf:label>source</xf:label>
-                                                    <xf:insert ev:event="DOMActivate" context="."
-                                                        origin="instance('i-source')//tei:source/@source"/>
-                                                </xf:trigger>&#160;
-                                                <!-- Add new source popup Use xf:dialog (consider subform?) -->
-                                                <xf:trigger class="btn btn-default" appearance="minimal">
-                                                    <xf:label>New Source</xf:label>
-                                                    <xf:action ev:event="DOMActivate">
-                                                        <xf:show dialog="new-source"/>
-                                                    </xf:action>
-                                                </xf:trigger>
-                                            </span>
-                                        </div>
+                                        <xf:switch id="new-place-name-switch" class="element-row">
+                                            <xf:case id="view-place-name" selected="true()">
+                                                <xf:group class="view">
+                                                    <xf:output ref=".">
+                                                        <xf:label>Name</xf:label>
+                                                    </xf:output>
+                                                    &#160;
+                                                    <xf:output ref="@source">
+                                                        <xf:label>Source</xf:label>
+                                                    </xf:output>
+                                                    &#160;
+                                                    <xf:output ref="@xml:lang">
+                                                        <xf:label>Lang</xf:label>
+                                                    </xf:output>
+                                                    &#160;
+                                                    <xf:trigger appearance="minimal" class="btn pull-right view">
+                                                        <xf:label>Edit</xf:label>
+                                                        <xf:toggle case="edit-place-name" ev:event="DOMActivate"/>
+                                                    </xf:trigger>
+                                                </xf:group>
+                                            </xf:case>
+                                            <xf:case id="edit-place-name">
+                                                <xf:group class="edit">
+                                                    <xf:input ref=".">
+                                                        <xf:label>Name</xf:label>
+                                                    </xf:input>
+                                                    <span>
+                                                        <xf:select1 ref="@source" class="input-small">
+                                                            <xf:label>Source:</xf:label>
+                                                            <xf:itemset ref="instance('i-rec')//tei:text//tei:bibl">
+                                                                <!-- LOGAR specific change -->
+                                                                <!--<xf:label ref="tei:title"/>-->
+                                                                <xf:label ref="."/>
+                                                                <xf:value ref="@xml:id"/>
+                                                            </xf:itemset>
+                                                        </xf:select1> 
+                                                        <!-- Add new source attribute if no source attribute -->
+                                                        <xf:trigger class="btn btn-default add" appearance="minimal" ref="self::*[not(@source)]">
+                                                            <xf:label>source</xf:label>
+                                                            <xf:insert ev:event="DOMActivate" context="." origin="instance('i-source')//tei:source/@source"/>
+                                                        </xf:trigger> 
+                                                        <!-- Add new source popup Use xf:dialog (consider subform?) -->
+                                                        <xf:trigger class="btn btn-default" appearance="minimal">
+                                                            <xf:label>New Source</xf:label>
+                                                            <xf:action ev:event="DOMActivate">
+                                                                <xf:show dialog="new-source"/>
+                                                            </xf:action>
+                                                        </xf:trigger>
+                                                    </span>
+                                                    <xf:trigger appearance="minimal" class="btn remove pull-right">
+                                                        <xf:label/>
+                                                        <xf:delete ev:event="DOMActivate" ref="."/>
+                                                    </xf:trigger>
+                                                    <xf:trigger appearance="minimal" class="btn pull-right view">
+                                                        <xf:label>View</xf:label>
+                                                        <xf:toggle case="view-place-name" ev:event="DOMActivate"/>
+                                                    </xf:trigger>
+                                                </xf:group>
+                                            </xf:case>
+                                        </xf:switch>
                                     </fieldset>
                                 </xf:repeat>
                                 <xf:trigger class="btn add" appearance="minimal">
                                     <xf:label>New Name</xf:label>
                                     <xf:insert ev:event="DOMActivate" ref="tei:placeName" at="last()" position="after" origin="instance('i-template')//tei:place/tei:placeName[1]"/>
+                                    <xf:toggle case="edit-place-name" ref="tei:placeName[last()]" ev:event="DOMActivate"/>
                                 </xf:trigger>
                             </div>
                             <div class="tab-pane" id="desc">
                                 <h3>Add Descriptions</h3>
                                 <xf:repeat ref="tei:desc" id="new-desc">
                                     <fieldset>
-                                        <legend> Description <xf:trigger appearance="minimal" class="btn remove pull-right">
-                                            <xf:label/>
-                                            <xf:delete ev:event="DOMActivate" ref="."/>
-                                        </xf:trigger>
-                                        </legend>
-                                        <div class="panel">
-                                            <xf:group ref="self::*[not(tei:quote/@source)]">
-                                                <span class="input-group mixed-content"></span>
+                                    <xf:switch id="new-desc-switch" class="element-row">
+                                        <xf:case id="view-desc" selected="true()">
+                                            <xf:group class="view">
+                                                <xf:output ref="."/>
                                                 <br/>
-                                                <xf:textarea id="d" ref="." incremental="true"/>
+                                                <xf:output ref="@source">
+                                                    <xf:label>Source</xf:label>
+                                                </xf:output>
+                                                &#160;
+                                                <xf:output ref="@xml:lang">
+                                                    <xf:label>Lang</xf:label>
+                                                </xf:output>
+                                                &#160;
+                                                <xf:trigger appearance="minimal" class="btn pull-right edit">
+                                                    <xf:label>Edit</xf:label>
+                                                    <xf:toggle case="edit-desc" ev:event="DOMActivate"/>
+                                                </xf:trigger>
                                             </xf:group>
-                                            <span>
-                                                <xf:select1 ref="@source" class="input-small">
-                                                    <xf:label>Source:</xf:label>
-                                                    <xf:itemset ref="instance('i-rec')//tei:text/descendant::tei:bibl">
-                                                        <xf:label ref="."/>
-                                                        <xf:value ref="@xml:id"/>
-                                                    </xf:itemset>
-                                                </xf:select1>&#160;
-                                                <!-- Add new source attribute if no source attribute -->
-                                                <xf:trigger class="btn btn-default add" appearance="minimal"
-                                                    ref="self::*[not(@source)]">
-                                                    <xf:label>source</xf:label>
-                                                    <xf:insert ev:event="DOMActivate" context="."
-                                                        origin="instance('i-source')//tei:source/@source"/>
+                                        </xf:case>
+                                        <xf:case id="edit-desc">
+                                            <xf:group class="edit">
+                                                <xf:group ref="self::*[not(tei:quote/@source)]">
+                                                    <span class="input-group mixed-content"/>
+                                                    <br/>
+                                                    <xf:textarea id="d" ref="." incremental="true"/>
+                                                </xf:group>
+                                                <span>
+                                                    <xf:select1 ref="@source" class="input-small">
+                                                        <xf:label>Source:</xf:label>
+                                                        <xf:itemset ref="instance('i-rec')//tei:text/descendant::tei:bibl">
+                                                            <xf:label ref="."/>
+                                                            <xf:value ref="@xml:id"/>
+                                                        </xf:itemset>
+                                                    </xf:select1> 
+                                                    <!-- Add new source attribute if no source attribute -->
+                                                    <xf:trigger class="btn btn-default add" appearance="minimal" ref="self::*[not(@source)]">
+                                                        <xf:label>source</xf:label>
+                                                        <xf:insert ev:event="DOMActivate" context="." origin="instance('i-source')//tei:source/@source"/>
+                                                    </xf:trigger>
+                                                    <!-- Add new source popup Use xf:dialog (consider subform?) -->
+                                                    <xf:trigger class="btn btn-default" appearance="minimal">
+                                                        <xf:label>New Source</xf:label>
+                                                        <xf:action ev:event="DOMActivate">
+                                                            <xf:show dialog="new-source"/>
+                                                        </xf:action>
+                                                    </xf:trigger>
+                                                    <!--<button type="text" class="btn btn-link btn-source" data-toggle="modal" data-target="#modal-source">New source</button>-->
+                                                </span>
+                                                <xf:trigger appearance="minimal" class="btn remove pull-right">
+                                                    <xf:label/>
+                                                    <xf:delete ev:event="DOMActivate" ref="."/>
                                                 </xf:trigger>
-                                                <!-- Add new source popup Use xf:dialog (consider subform?) -->
-                                                <xf:trigger class="btn btn-default" appearance="minimal">
-                                                    <xf:label>New Source</xf:label>
-                                                    <xf:action ev:event="DOMActivate">
-                                                        <xf:show dialog="new-source"/>
-                                                    </xf:action>
+                                                <xf:trigger appearance="minimal" class="btn pull-right view">
+                                                    <xf:label>View</xf:label>
+                                                    <xf:toggle case="view-desc" ev:event="DOMActivate"/>
                                                 </xf:trigger>
-                                                <!--<button type="text" class="btn btn-link btn-source" data-toggle="modal" data-target="#modal-source">New source</button>-->
-                                            </span>
-                                        </div>
+                                            </xf:group>
+                                        </xf:case>
+                                    </xf:switch>
                                     </fieldset>
                                 </xf:repeat>
                                 <xf:trigger class="btn add" appearance="minimal">
                                     <xf:label>New Description</xf:label>
                                     <xf:insert ev:event="DOMActivate" ref="child::*" origin="instance('i-template')//tei:place/tei:desc[1]"/>
+                                    <xf:toggle case="edit-desc" ref="tei:desc[last()]" ev:event="DOMActivate"/>
+                                </xf:trigger>
+                                <div>
+                                    <xf:repeat ref="tei:note" id="new-note">
+                                        <fieldset>
+                                        <xf:switch id="new-note-switch" class="element-row">
+                                            <xf:case id="view-note" selected="true()">
+                                                <xf:group class="view">
+                                                    <xf:output ref="."/>
+                                                    <br/>
+                                                   <xf:output ref="@type">
+                                                       <xf:label>Source</xf:label>    
+                                                   </xf:output>
+                                                    &#160;
+                                                    <xf:output ref="@source">
+                                                        <xf:label>Source</xf:label>
+                                                    </xf:output>
+                                                    &#160;
+                                                    <xf:output ref="@xml:lang">
+                                                        <xf:label>Lang</xf:label>
+                                                    </xf:output>
+                                                    &#160;
+                                                    <xf:trigger appearance="minimal" class="btn pull-right edit">
+                                                        <xf:label>Edit</xf:label>
+                                                        <xf:toggle case="edit-note" ev:event="DOMActivate"/>
+                                                    </xf:trigger>
+                                                </xf:group>
+                                            </xf:case>
+                                            <xf:case id="edit-note">
+                                                <xf:group class="edit">
+                                                    <xf:textarea ref="."/>
+                                                    <span>
+                                                        <xf:select1 ref="@source" class="input-small">
+                                                            <xf:label>Source:</xf:label>
+                                                            <xf:itemset ref="instance('i-rec')//tei:text/descendant::tei:bibl">
+                                                                <xf:label ref="."/>
+                                                                <xf:value ref="@xml:id"/>
+                                                            </xf:itemset>
+                                                        </xf:select1> 
+                                                        <!-- Add new source attribute if no source attribute -->
+                                                        <xf:trigger class="btn btn-default add" appearance="minimal" ref="self::*[not(@source)]">
+                                                            <xf:label>source</xf:label>
+                                                            <xf:insert ev:event="DOMActivate" context="." origin="instance('i-source')//tei:source/@source"/>
+                                                        </xf:trigger>
+                                                        <!-- Add new source popup Use xf:dialog (consider subform?) -->
+                                                        <xf:trigger class="btn btn-default" appearance="minimal">
+                                                            <xf:label>New Source</xf:label>
+                                                            <xf:action ev:event="DOMActivate">
+                                                                <xf:show dialog="new-source"/>
+                                                            </xf:action>
+                                                        </xf:trigger>
+                                                        <!--<button type="text" class="btn btn-link btn-source" data-toggle="modal" data-target="#modal-source">New source</button>-->
+                                                    </span>
+                                                    <span>
+                                                        <xf:select1 ref="@type">
+                                                            <xf:label>Type</xf:label>
+                                                            <xf:item>
+                                                                <xf:label>--- Select Type ---</xf:label>
+                                                                <xf:value/>
+                                                            </xf:item>
+                                                            <!-- NOTE: would be useful to have controlled vals based on parent element.  -->
+                                                            <xf:itemset ref="instance('i-ctr-vals')//tei:notes/tei:type">
+                                                                <xf:label ref="."/>
+                                                                <xf:value ref="."/>
+                                                            </xf:itemset>
+                                                        </xf:select1>
+                                                        <xf:trigger class="btn add" appearance="minimal" ref="self::node()[not(@type)]">
+                                                            <xf:label>add type</xf:label>
+                                                            <xf:insert ev:event="DOMActivate" context="." at="." origin="instance('i-template')//tei:note/@type"/>
+                                                        </xf:trigger>
+                                                        <xf:trigger class="btn remove" appearance="minimal" ref="@type">
+                                                            <xf:label/>
+                                                            <xf:delete ev:event="DOMActivate" ref="."/>
+                                                        </xf:trigger>
+                                                    </span>
+                                                    <span>
+                                                        <xf:select1 ref="@xml:lang">
+                                                            <xf:label>Lang</xf:label>
+                                                            <xf:item>
+                                                                <xf:label>--- Select Language ---</xf:label>
+                                                                <xf:value/>
+                                                            </xf:item>
+                                                            <xf:itemset ref="instance('i-ctr-vals')//tei:langUsage/tei:language">
+                                                                <xf:label ref="."/>
+                                                                <xf:value ref="."/>
+                                                            </xf:itemset>
+                                                        </xf:select1>
+                                                    </span>
+                                                    <xf:trigger appearance="minimal" class="btn remove pull-right">
+                                                        <xf:label/>
+                                                        <xf:delete ev:event="DOMActivate" ref="."/>
+                                                    </xf:trigger>
+                                                    <xf:trigger appearance="minimal" class="btn pull-right view">
+                                                        <xf:label>View</xf:label>
+                                                        <xf:toggle case="view-desc" ev:event="DOMActivate"/>
+                                                    </xf:trigger>
+                                                </xf:group>
+                                            </xf:case>
+                                        </xf:switch>
+                                        </fieldset>
+                                    </xf:repeat>
+                                </div>
+                                <xf:trigger class="btn add" appearance="minimal">
+                                    <xf:label>New note</xf:label>
+                                    <xf:insert ev:event="DOMActivate" ref="child::*" origin="instance('i-template')//tei:place/tei:note[1]"/>
+                                    <xf:toggle case="edit-note" ref="tei:note[last()]" ev:event="DOMActivate"/>
                                 </xf:trigger>
                             </div>
                             <div class="tab-pane" id="details">
-                                <h3>Additional Place Details</h3>
-                                <xi:include href="../tei/location-el.xml"/>
+                                <h3>Locations</h3>
+                                <div>
+                                    <xf:repeat ref="tei:location[tei:geo]" id="new-geo">
+                                        <fieldset>
+                                            <xf:switch id="new-geo-switch" class="element-row">
+                                                <xf:case id="view-geo" selected="true()">
+                                                    <xf:group class="view">
+                                                        <xf:output ref="tei:geo">
+                                                            <xf:label>Coordinates</xf:label>
+                                                        </xf:output>
+                                                        &#160;
+                                                        <xf:output ref="@source">
+                                                            <xf:label>Source</xf:label>
+                                                        </xf:output>
+                                                        &#160;
+                                                        <xf:output ref="@xml:lang">
+                                                            <xf:label>Lang</xf:label>
+                                                        </xf:output>
+                                                        &#160;
+                                                        <xf:trigger appearance="minimal" class="btn pull-right view">
+                                                            <xf:label>Edit</xf:label>
+                                                            <xf:toggle case="edit-geo" ev:event="DOMActivate"/>
+                                                        </xf:trigger>
+                                                    </xf:group>
+                                                </xf:case>
+                                                <xf:case id="edit-geo">
+                                                    <xf:group class="edit">
+                                                        <xf:input ref="tei:geo">
+                                                            <xf:label>Coordinates</xf:label>
+                                                        </xf:input>
+                                                        <span>
+                                                            <xf:select1 ref="@source" class="input-small">
+                                                                <xf:label>Source:</xf:label>
+                                                                <xf:itemset ref="instance('i-rec')//tei:text//tei:bibl">
+                                                                    <!-- LOGAR specific change -->
+                                                                    <!--<xf:label ref="tei:title"/>-->
+                                                                    <xf:label ref="."/>
+                                                                    <xf:value ref="@xml:id"/>
+                                                                </xf:itemset>
+                                                            </xf:select1> 
+                                                            <!-- Add new source attribute if no source attribute -->
+                                                            <xf:trigger class="btn btn-default add" appearance="minimal" ref="self::*[not(@source)]">
+                                                                <xf:label>source</xf:label>
+                                                                <xf:insert ev:event="DOMActivate" context="." origin="instance('i-source')//tei:source/@source"/>
+                                                            </xf:trigger> 
+                                                            <!-- Add new source popup Use xf:dialog (consider subform?) -->
+                                                            <xf:trigger class="btn btn-default" appearance="minimal">
+                                                                <xf:label>New Source</xf:label>
+                                                                <xf:action ev:event="DOMActivate">
+                                                                    <xf:show dialog="new-source"/>
+                                                                </xf:action>
+                                                            </xf:trigger>
+                                                        </span>
+                                                        <xf:trigger appearance="minimal" class="btn remove pull-right">
+                                                            <xf:label/>
+                                                            <xf:delete ev:event="DOMActivate" ref="."/>
+                                                        </xf:trigger>
+                                                        <xf:trigger appearance="minimal" class="btn pull-right view">
+                                                            <xf:label>View</xf:label>
+                                                            <xf:toggle case="view-geo" ev:event="DOMActivate"/>
+                                                        </xf:trigger>
+                                                    </xf:group>
+                                                </xf:case>
+                                            </xf:switch>
+                                        </fieldset>
+                                    </xf:repeat>                                        
+                                    <xf:repeat ref="tei:location[@type='relative'][tei:desc]" id="new-location">
+                                        <fieldset>
+                                            <xf:switch id="new-location-switch" class="element-row">
+                                                <xf:case id="view-location" selected="true()">
+                                                        <xf:group class="view">
+                                                            <xf:output ref="tei:desc">
+                                                                <xf:label>Location</xf:label>
+                                                            </xf:output>
+                                                            &#160;
+                                                            <xf:output ref="@source">
+                                                                <xf:label>Source</xf:label>
+                                                            </xf:output>
+                                                            &#160;
+                                                            <xf:output ref="@xml:lang">
+                                                                <xf:label>Lang</xf:label>
+                                                            </xf:output>
+                                                            &#160;
+                                                            <xf:trigger appearance="minimal" class="btn pull-right view">
+                                                                <xf:label>Edit</xf:label>
+                                                                <xf:toggle case="edit-location" ev:event="DOMActivate"/>
+                                                            </xf:trigger>
+                                                        </xf:group>
+                                                    </xf:case>
+                                                <xf:case id="edit-location">
+                                                    <xf:group class="edit">
+                                                        <xf:input ref="tei:desc">
+                                                            <xf:label>Location</xf:label>
+                                                        </xf:input>
+                                                        <span>
+                                                            <xf:select1 ref="@source" class="input-small">
+                                                                <xf:label>Source:</xf:label>
+                                                                <xf:itemset ref="instance('i-rec')//tei:text//tei:bibl">
+                                                                    <xf:label ref="."/>
+                                                                    <xf:value ref="@xml:id"/>
+                                                                </xf:itemset>
+                                                            </xf:select1> 
+                                                            <!-- Add new source attribute if no source attribute -->
+                                                            <xf:trigger class="btn btn-default add" appearance="minimal" ref="self::*[not(@source)]">
+                                                                <xf:label>source</xf:label>
+                                                                <xf:insert ev:event="DOMActivate" context="." origin="instance('i-source')//tei:source/@source"/>
+                                                            </xf:trigger> 
+                                                            <!-- Add new source popup Use xf:dialog (consider subform?) -->
+                                                            <xf:trigger class="btn btn-default" appearance="minimal">
+                                                                <xf:label>New Source</xf:label>
+                                                                <xf:action ev:event="DOMActivate">
+                                                                    <xf:show dialog="new-source"/>
+                                                                </xf:action>
+                                                            </xf:trigger>
+                                                        </span>
+                                                        <xf:trigger appearance="minimal" class="btn remove pull-right">
+                                                            <xf:label/>
+                                                            <xf:delete ev:event="DOMActivate" ref="."/>
+                                                        </xf:trigger>
+                                                        <xf:trigger appearance="minimal" class="btn pull-right view">
+                                                            <xf:label>View</xf:label>
+                                                            <xf:toggle case="view-location" ev:event="DOMActivate"/>
+                                                        </xf:trigger>    
+                                                    </xf:group>
+                                                </xf:case>
+                                            </xf:switch>
+                                        </fieldset>
+                                    </xf:repeat>
+                                </div> 
                                 <xf:trigger class="btn add" appearance="minimal">
                                     <xf:label>Add Coordinates</xf:label>
                                     <xf:insert ev:event="DOMActivate" ref="child::*" origin="instance('i-location')//tei:location[@type = 'gps']"/>
+                                    <xf:toggle case="view-geo" ref="tei:location[tei:geo][last()]" ev:event="DOMActivate"/>
                                 </xf:trigger>
                                 <xf:trigger class="btn add" appearance="minimal">
                                     <xf:label>Add Location Description</xf:label>
                                     <xf:insert ev:event="DOMActivate" ref="child::*" origin="instance('i-location')//tei:location[@type = 'relative'][1]"/>
-                                </xf:trigger>
-                                <xi:include href="../tei/note-el.xml"/>
-                                <xf:trigger class="btn add" appearance="minimal">
-                                    <xf:label>New note</xf:label>
-                                    <xf:insert ev:event="DOMActivate" ref="child::*" origin="instance('i-template')//tei:place/tei:note[1]"/>
+                                    <xf:toggle case="view-location" ref="tei:location[tei:desc][last()]" ev:event="DOMActivate"/>
                                 </xf:trigger>
                             </div>
                             <div class="tab-pane" id="sources">
                                 <h3>Sources</h3>
-                                <xi:include href="../tei/bibl-output-el.xml"/>
+                                <div>
+                                    <!-- Review and delete bibl records -->
+                                    <xf:repeat ref="tei:bibl" id="element-row">
+                                        <fieldset>
+                                            <div class="panel">
+                                                <xf:repeat ref="tei:title" id="source-view-title">
+                                                    <xf:output ref=".">
+                                                        <xf:label class="inline">Title: </xf:label>
+                                                    </xf:output>
+                                                    <xf:output ref="@level">
+                                                        <xf:label class="inline">Level: </xf:label>
+                                                    </xf:output>
+                                                </xf:repeat>
+                                                <xf:repeat ref="tei:author" id="source-view-auth">
+                                                    <xf:output ref=".">
+                                                        <xf:label class="inline">Author: </xf:label>
+                                                    </xf:output>
+                                                </xf:repeat>
+                                                <xf:repeat ref="tei:editor" id="source-view-editor">
+                                                    <xf:output ref=".">
+                                                        <xf:label class="inline">Editor: </xf:label>
+                                                    </xf:output>
+                                                </xf:repeat>
+                                            </div>
+                                        </fieldset>
+                                    </xf:repeat>
+                                </div>
                                 <xf:trigger class="btn btn-default" appearance="minimal">
                                     <xf:label>New Source</xf:label>
                                     <xf:action ev:event="DOMActivate">
@@ -331,8 +673,9 @@
                         </div>
                     </div>
                     <div class="section pull-right">
-                        <xf:submit class="btn btn-default" submission="s-update-rec" appearance="minimal">
-                            <xf:label><span class="glyphicon glyphicon-save-file"/> Submit</xf:label>
+                        <xf:submit class="btn btn-default" submission="s-save" appearance="minimal">
+                            <xf:label>
+                            <span class="glyphicon glyphicon-save-file"/> Submit</xf:label>
                         </xf:submit>
                     </div>
                 </xf:group>
