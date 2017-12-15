@@ -33,11 +33,6 @@
         <comments-root>srophe-comments</comments-root>
         <!-- Base URI for identifiers in app data -->
         <base-uri>http://syriaca.org</base-uri>
-        <!-- Map rendering -->
-        <maps>
-            <option>google</option>
-            <option selected="true">leaflet</option>
-        </maps>
     </config>
     <deployed>2017-09-26T10:13:29.189-04:00</deployed>
 </meta>
