@@ -1,8 +1,8 @@
 body {
   padding:30px;
-  font:14px/1.5 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font:12px/1.4 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
   color:#777;
-  font-weight:400;
+  /*font-weight:300;*/
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -105,6 +105,10 @@ fieldset {
 .horiz-tab-menu .edit{
     background-color:#ccc;
 }
+.writeIn:before{    
+    content:"\270f";
+    padding-right:1em;}
+    
 /*
 .horiz-tab-menu .edit:before{
     font-family:"Glyphicons Halflings";
@@ -157,23 +161,10 @@ fieldset {
 }
 
 .element-row {
-    border:1px solid red;
-    margin-top:0;
-    padding-top:.5em;
-    padding-left:.5em;
+    margin:0;
+    padding:.25em;
 }
 
-.element-row .edit{
-    margin-top:0;
-    padding-top:1em;
-    padding-left:1em;
-}
-
-.element-row .view{
-    margin-top:0;
-    padding-top:1em;
-    padding-left:1em;
-}
 .modal-dialog{
 /* new custom width */
     width: 950px;
@@ -198,21 +189,20 @@ fieldset {
 
 .modal-close .xforms-label:before{
     font-family:"Glyphicons Halflings";
-    /*content:"\e083";*/
     content:"\e014";
     margin-top:-.5em;
     margin-left:-.5em;
     color:grey;
 }
 
-.accordion h4[aria-expanded="false"] span.glyphicon-chevron-down,
-.accordion h4[aria-expanded="true"] span.glyphicon-chevron-right
+.accordion .panel-heading[aria-expanded="false"] span.glyphicon-chevron-down,
+.accordion .panel-heading[aria-expanded="true"] span.glyphicon-chevron-right
 {
     display: none;
 }
 
-.accordion h4[aria-expanded="true"] span.glyphicon-chevron-down,
-.accordion h4[aria-expanded="false"] span.glyphicon-chevron-right
+.accordion .panel-heading[aria-expanded="true"] span.glyphicon-chevron-down,
+.accordion .panel-heading[aria-expanded="false"] span.glyphicon-chevron-right
 {
     display: inline;
 }
@@ -220,7 +210,6 @@ fieldset {
 /* XSLT Forms styles */
 /*#xsltforms_debug {display:none;}*/
 .xforms-label {display:inline; padding-right:.5em; padding-left:1em; font-weight:600;}
-.xforms-label:after {content:": ";}
 
 .xforms-select option{width: 40em;}
 
@@ -300,7 +289,8 @@ div.xforms-dialog {
 .xforms-textarea {display:block;}
 
 /*span.xforms-textarea {display:block;} label get wrapped in this as well */
-span.value textarea{display:block; width: 80% !important; margin-left:6em; display:block;}
+span.value textarea{display:block; width: 80% !important; margin-left:6em;}
+span.text-area-attributes {display:block; width: 80% !important; margin-left:6em;}
 /*span.large label{display:inline;}*/
 
 .indent-form {margin-left:2.5em;}
