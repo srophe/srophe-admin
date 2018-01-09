@@ -144,6 +144,7 @@ return
     else if(request:get-parameter('type', '') = 'get-rec') then
        root(collection($global:data-root)//tei:idno[. = $id])
     else if(request:get-parameter('type', '') = 'save') then
+    (:
         try {
             let $save := xmldb:store($collection-uri, xmldb:encode-uri($file-name), $post-processed-xml)
             return 
@@ -154,17 +155,12 @@ return
                 <message>Failed to update resource {$id}: {concat($err:code, ": ", $err:description)}</message>
             </response>)
         }
-(:        
-        <response code="400">
-            <message>Please download the record and save to Syriaca.org's github repository.</message>
-        </response>
         :)
-    else if(request:get-parameter('type', '') = 'download') then
-       (response:set-header("Content-Disposition", fn:concat("attachment; filename=", $file-name)),$post-processed-xml)
-    else if(request:get-parameter('type', '') = 'save') then
         <response code="400">
-            <message>Please download the record and save to Syriaca.org's github repository.</message>
-        </response>         
+            <message>Thanks for your submission, this feature is being tested and your data will not be saved to the database at this time, use the download button to save a local copy of the record. </message>
+        </response>
+    else if(request:get-parameter('type', '') = 'download') then
+       (response:set-header("Content-Disposition", fn:concat("attachment; filename=", $file-name)),$post-processed-xml)       
     else if(request:get-parameter('type', '') = 'merge') then
         if($id != '') then
             let $record := root(collection($global:data-root)//tei:idno[. = $id])
